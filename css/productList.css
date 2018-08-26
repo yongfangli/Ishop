@@ -1,0 +1,58 @@
+ul{
+    list-style: none;
+}
+.inner{
+    //ist-style: disc;
+    margin-left: 30px;
+}
+.img{
+    width: 200px;
+    height: 250px;
+}
+.menu{
+    float: left;
+    width: 350px;
+}
+.navlist{
+    background: #c2c2e4;
+
+}
+.clomun{
+    float: right;
+    width: 850px;
+    text-align: center;
+}
+.content{
+    display: flex;
+    justify-content: space-around;
+}
+.prolist li{
+    width: 250px;
+}
+.prolist {
+    display: flex;
+    flex-wrap: wrap;
+}
+.page{
+    padding-top: 20px;
+      display:inline-flex;
+    text-align: center;
+    place-content: center;
+
+}
+.page span{
+
+}
+.pagenum{
+    display: flex;
+    padding: 0 80px;
+}
+.pagenum li{
+    border: 1px solid #efe4e4;
+    padding: 0px 6px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.notice{
+    background: red;
+}

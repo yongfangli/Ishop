@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>产品展示</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/productList.css">
+</head>
+<body>
+<div id="app" class="wrap">
+<div class="content">
+    <div class="menu">
+    <ul class="navlist">
+        <li>后台管理
+            <ul class="inner">
+                    <li>商品进销存管理系统</li>
+                    <li>居民物业管理系统</li>
+                    <li>考勤系统</li></ul>   </li>
+        <li>智能端<ul class="inner">
+                <li>手机app</li>
+                <li>微信小程序</li>
+                <li>微信公众号</li>
+                <li>硬件设备</li>
+                <li>itv程序</li></ul> </li>
+    </ul>
+    </div>
+    <div class="clomun">
+        <ul class="prolist">
+            <li>
+                <span>智慧社区</span>
+                 <img class="img" src="img/app/24184145565726247.jpg"/>
+            </li>
+            <li>
+                <span>智慧社区</span>
+                <img class="img" src="img/app/24184145565726247.jpg"/>
+            </li>
+            <li>
+                <span>智慧社区</span>
+                <img class="img" src="img/app/24184145565726247.jpg"/>
+            </li>
+            <li>
+                <span>智慧社区</span>
+                <img class="img" src="img/app/24184145565726247.jpg"/>
+            </li>
+            <li>
+                <span>智慧社区</span>
+                <img class="img" src="img/app/24184145565726247.jpg"/>
+            </li>
+            <li>
+                <span>智慧社区</span>
+                <img class="img" src="img/app/24184145565726247.jpg"/>
+            </li>
+        </ul>
+        <div class="page">
+            <span class="one">第一页</span><span class="pre">上一页</span>
+            <ul class="pagenum"><li @mouseover="changeStyle" @mouseout="changeStyle">1</li><li>2</li><li>3</li><li>4</li></ul>
+            <span class="next">下一页</span><span class="end">尾页</span>
+        </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+<script src="js/plugin/vue.min.js"></script>
+<script src="js/plugin/jquery.min.js"></script>
+<script>
+    var vm=new Vue({
+        el: '#app',
+        data: {
+            
+        },
+        methods:{
+            changeStyle:function (e) {
+               var li=e.target;
+               if($(li).hasClass("notice")){
+                   $(li).removeClass("notice");
+               }else{
+                   $(li).addClass("notice");
+               }
+
+            }
+        }
+    })
+</script>
+</body>
+</html>

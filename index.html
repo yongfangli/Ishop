@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/common.css">
+
+
+</head>
+<body>
+
+<div id="app" class="wrap">
+    <div class="header">
+        <h2>{{title}}</h2>
+    </div>
+<div class="bar"><ul class="nav"><li><a href="productList.html">产品展示</a></li><li><a href="#">合作伙伴</a></li><li><a href="#">联系我们</a></li></ul></div>
+    <div class="p-list">
+        <div class="left"><span @click="left" id="left-b"><</span></div>
+        <div class="center">
+        <ul class="tog">
+
+        </ul>
+        </div>
+        <div class="right"><span @click="right" id="right-b">></span></div>
+    </div>
+    <div class="aboutus">
+        <p>{{desc}}</p>
+    </div>
+
+</div>
+<script src="js/plugin/vue.min.js"></script>
+<script src="js/plugin/jquery.min.js"></script>
+<script>
+    var vm=new Vue({
+        el:'#app',
+        data:{
+            title:'专业互联网产品服务商，致力于更好的用户体验和产品增值服务',
+            desc:'为您提供最专业的互联网产品解决方案，以及互联网营销方案,我们专业的开发团队以及丰富的相关从业经验',
+            imgList:['img/网站后台系统/edit.png',
+                     'img/网站后台系统/product.png',
+                    'img/网站后台系统/privilage.png',
+            'img/微信公众号/338511906367210283.jpg']
+        },
+        created: function () {
+            var vm=this;
+              var len=vm.imgList.length;
+               for(var i=0;i<len;i++){
+                 var ltext=$("<li></li>");
+                   ltext.css("z-index",i);
+                 var imgs=$("<img />");
+                 imgs.attr("src",vm.imgList[i]);
+                   ltext.append(imgs);
+                   $(".tog").append(ltext);
+               }
+
+        },
+        methods:{
+            left:function(){
+                var vm=this;
+              var lis=$(".tog li");
+              console.info(lis);
+              var len=lis.length-1;
+              for(var i=0;i<=len ;i++){
+                var index=$(lis[i]).css("z-index");
+                var indexn=parseInt(index);
+                if(indexn==0){
+                    $(lis[i]).css("z-index",indexn+len);
+                    if($(lis[i]).css("z-index")==len){
+                        $(lis[i]).addClass("move").siblings().removeClass("move");
+                    }
+                }else{
+                    $(lis[i]).css("z-index",indexn-1);
+                }
+              }
+            },
+            right:function () {
+                var vm=this;
+                var lis=$(".tog li");
+                console.info(lis);
+                var len=lis.length-1;
+                for(var i=0;i<=len ;i++){
+                    var index=$(lis[i]).css("z-index");
+                    var indexn=parseInt(index);
+                    if(indexn<len){
+                        $(lis[i]).css("z-index",indexn+1);
+                        if($(lis[i]).css("z-index")==len){
+                            $(lis[i]).addClass("move").siblings().removeClass("move");
+                        }
+                    }else{
+                        $(lis[i]).css("z-index",indexn-len);
+                    }
+                }
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

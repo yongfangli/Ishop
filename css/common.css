@@ -1,0 +1,10 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.wrap{
+    width: 1200px;
+    margin: 0 auto;
+    background: #c2c2e4;
+    color: #796e6e;
+}
