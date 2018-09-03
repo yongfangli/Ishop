@@ -15,7 +15,10 @@ ul{
 }
 .navlist{
     background: #c2c2e4;
-
+    padding: 5px 20px;
+}
+.navlist li{
+    margin-top:10px;
 }
 .clomun{
     float: right;
@@ -28,6 +31,7 @@ ul{
 }
 .prolist li{
     width: 250px;
+    margin-top: 20px;
 }
 .prolist {
     display: flex;
@@ -55,4 +59,15 @@ ul{
 }
 .notice{
     background: red;
+}
+.page span {
+    margin-left: 10px;
+    background: #cabbbb;
+    color: white;
+    border-radius: 2px;
+    padding: 2px;
+    cursor: pointer;
+}
+.inner li{
+    margin-top:10px;
 }
