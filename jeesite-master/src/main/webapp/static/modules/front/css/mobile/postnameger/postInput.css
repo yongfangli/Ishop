@@ -3,19 +3,84 @@
 	font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
     margin:0 auto;
 }
+  body {
+               background-color: #f8fbc8;
+        }
+   #app {
+            margin:20px auto;
+            width: 800px;
+            max-width: 100%;
+        }
+  .vue-html5-editor {
+            color: chocolate;
+            background-color:   #f8fbc8;
+   }
 .content{
-    margin: 0 auto;
-    background: #8a8787;
+      margin: 0 auto;
+    background: #fdfdfd;
     height: 400px;
-    color: white;
+    color: #040404;
 }
 。form{
 	width:400px;
 	
 }
-.big-clnm{
-	
+.editor{
+	   min-height: 200px;
+    background: #fdfdfd;
+    outline: none;
+    border: 1px solid #ddd;
+    color: #000000;
 }
-.upload-cont{
-	
+
+.clkb{
+	 padding: 5px;
+    background: #cceef9;
+    outline: none;
+    color: #271505;
+    border: none;
+    border-radius: 12px;
+
+}
+.buttong{
+	    text-align: right;
+	        padding-bottom: 2px;
+}
+.upload{
+	position:relative;
+}
+.file{
+	    opacity: 0;
+	position: absolute;
+    left: 0;
+    top: 14px;
+}
+.imglist{
+	padding-left: 40px;
+	list-style-type: none;
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+}
+.img-item img{
+	width: 100px;
+    height: 150px;
+}
+.video{
+	width: 100px;
+    height: 150px;
+}
+.imgs{
+	margin-top: -40px;
+}
+.bottom{
+	display:flex;
+	position: fixed;
+    bottom: 0px;
+    width: 100%;
+    background: #cceef9;
+       justify-content: center;
+    align-items: center;
+    height: 30px;
+    text-align: center;
 }

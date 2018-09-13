@@ -4,28 +4,34 @@
 <html>
 <head>
 <%@include file="/WEB-INF/views/include/webHead.jsp" %>
-<link href="${ctxStatic}/modules/front/css/mobile/postnameger/postInput.css" type="text/css" rel="stylesheet" />
-<meta charset="utf-8">
-        <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+ <link href="${ctxStatic}/modules/front/css/mobile/postnameger/postInput.css" type="text/css" rel="stylesheet" />
+ <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 <title>帖子录入</title>
 <style>
-    
+   body {
+            background-color: darkseagreen;
+        }
 
+        #app {
+            margin: 50px auto;
+            width: 800px;
+            max-width: 100%;
+        }
 
-      
+        /*just set the color and background color of .vue-html5-editor*/
+        .vue-html5-editor {
+            color: chocolate;
+            background-color: darkseagreen;
+        }
 </style>
 </head>
 <body>
 
 <div class="" id="app">
-<div class="buttong">
-    <input class="clkb" type="button" value="基本版" @click="changeStyle(1)"/>
-     <input class="clkb" type="button" value="高级版" @click="changeStyle(2)"/>
-    </div>
-<vue-html5-editor :content="content" :height="300"></vue-html5-editor>
-<div class="bottom" @click="commit">发布</div>
+<vue-html5-editor :content="content" :height="500"></vue-html5-editor>
 </div>
-
+<script src="${ctxStatic}/modules/front/js/vue-html5-editor.js"></script>
+<script src="${ctxStatic}/modules/front/js/vue.min.js"></script>
 <script>
 Vue.use(VueHtml5Editor,{ // 全局组件名称，使用new VueHtml5Editor(options)时该选项无效 
     // global component name
@@ -153,8 +159,7 @@ Vue.use(VueHtml5Editor,{ // 全局组件名称，使用new VueHtml5Editor(option
         "eraser",
         "undo",
         "full-screen",
-        "video"
-        //"info",
+        "info",
     ],
     // 扩展模块，具体可以参考examples或查看源码
     // extended modules
@@ -165,16 +170,6 @@ new Vue({
     el: "#app",
     data: {
         content: "",
-    },
-    methods:{
-    	 changeStyle:function(val){
-         	var vm=this;
-         	if(val==1){
-         		window.location.href="${ctx}"+"/post/postInput?style=basic";
-         	}else if(val==2){
-         		window.location.href="${ctx}"+"/post/postInput";
-         	}
-         }
     }
 })
 

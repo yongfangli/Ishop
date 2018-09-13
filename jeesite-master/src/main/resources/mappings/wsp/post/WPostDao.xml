@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.post.dao.WPostDao">
+    
+	<sql id="wPostColumns">
+		a.id AS "id",
+		a.content AS "content",
+		a.file_ids AS "fileIds",
+		a.user_id AS "user.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="wPostJoins">
+		LEFT JOIN w_user u ON u.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="WPost">
+		SELECT 
+			<include refid="wPostColumns"/>
+		FROM w_post a
+		<include refid="wPostJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WPost">
+		SELECT 
+			<include refid="wPostColumns"/>
+		FROM w_post a
+		<include refid="wPostJoins"/>
+		<where>
+			<if test="user != null and user.firstIp != '' and user.firstIp != null">
+			    u.first_ip=#{user.firstIp}
+			</if>
+			<if test="user != null and user.id != '' and user.id != null">
+			   and  u.id=#{user.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WPost">
+		SELECT 
+			<include refid="wPostColumns"/>
+		FROM w_post a
+		<include refid="wPostJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_post(
+			id,
+			content,
+			file_ids,
+			user_id,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{content},
+			#{fileIds},
+			#{user.id},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_post SET 	
+			content = #{content},
+			file_ids = #{fileIds},
+			user_id = #{user.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_post
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,41 @@
+    *{
+        margin:0;
+        padding:0;
+    }
+    
+#app{
+    max-width: 800px;
+    margin: 0 auto;
+}
+.header{
+    margin-top: 20px;
+}
+.content{
+    margin-top: 10px;
+    padding-top: 10px;
+    border: 1px solid #f9f1f1;
+ 
+}
+.portrait{
+    border-radius: 39px;
+    width: 80px;
+    border: 1px solid #e0cdcd;
+}
+.data-list{
+    text-align: center;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+.item{
+	width: 45%;
+    margin-left: 10px;
+    margin-top: 20px;
+}
+.item img{
+	height: 80px;
+    width: 100px;
+}
+.text{
+	font-size: 0.9rem;
+}

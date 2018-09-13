@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.user.dao.WUserDao">
+    
+	<sql id="wUserColumns">
+		a.id AS "id",
+		a.first_ip AS "firstIp",
+		a.browser_type AS "browserType",
+		a.client AS "client",
+		a.nickname AS "nickname",
+		a.username AS "username",
+		a.phone AS "phone",
+		a.portrait AS "portrait",
+		a.remark AS "remark",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.email AS "email",
+		a.userType AS "userType"
+	</sql>
+	
+	<sql id="wUserJoins">
+	</sql>
+    
+	<select id="get" resultType="WUser">
+		SELECT 
+			<include refid="wUserColumns"/>
+		FROM w_user a
+		<include refid="wUserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WUser">
+		SELECT 
+			<include refid="wUserColumns"/>
+		FROM w_user a
+		<include refid="wUserJoins"/>
+		<where>
+			<if test="firstIp != '' and firstIp != null">
+			    a.first_ip=#{firstIp}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WUser">
+		SELECT 
+			<include refid="wUserColumns"/>
+		FROM w_user a
+		<include refid="wUserJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_user(
+			id,
+			first_ip,
+			browser_type,
+			client,
+			nickname,
+			username,
+			phone,
+			portrait,
+			remark,
+			create_date,
+			update_date,
+			email,
+			userType
+		) VALUES (
+			#{id},
+			#{firstIp},
+			#{browserType},
+			#{client},
+			#{nickname},
+			#{username},
+			#{phone},
+			#{portrait},
+			#{remark},
+			#{createDate},
+			#{updateDate},
+			#{email},
+			#{userType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_user SET 	
+			first_ip = #{firstIp},
+			browser_type = #{browserType},
+			client = #{client},
+			nickname = #{nickname},
+			username = #{username},
+			phone = #{phone},
+			portrait = #{portrait},
+			remark = #{remark},
+			update_date = #{updateDate},
+			email = #{email},
+			userType=#{userType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_user
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
