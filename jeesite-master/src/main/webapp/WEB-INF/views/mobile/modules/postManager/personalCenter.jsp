@@ -27,7 +27,7 @@
      <ul class="data-list">
      <template v-if="postList" v-for="option in postList">
      <li class="item">
-     <img  :src="'${ctx}/post/file/'+option.fileIds" /> 
+     <img v-if="option.fileIds!=''" :src="'${ctx}/post/file/'+option.fileIds" /> 
        <p class="text">{{option.content}}</p>
      </li>
      </template>

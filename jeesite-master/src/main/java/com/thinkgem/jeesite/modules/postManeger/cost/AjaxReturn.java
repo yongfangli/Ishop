@@ -1,4 +1,4 @@
-package com.thinkgem.jeesite.modules.postManeger.Controller;
+package com.thinkgem.jeesite.modules.postManeger.cost;
 
 public class AjaxReturn {
   public static final String STATUS="status";

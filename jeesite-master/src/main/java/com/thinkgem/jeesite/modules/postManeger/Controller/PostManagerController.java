@@ -33,6 +33,7 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.UserAgentUtils;
+import com.thinkgem.jeesite.modules.postManeger.cost.AjaxReturn;
 import com.thinkgem.jeesite.modules.postManeger.cost.UserType;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
 import com.thinkgem.jeesite.modules.wsp.post.service.WPostService;
@@ -59,6 +60,9 @@ public class PostManagerController extends MyBaseController {
 
 	@RequestMapping(value = "postInput")
 	public String goPostInput(Model model, String style) {
+		//测试文本是否包含一些不法言论
+		
+		
 		if (StringUtils.isNotEmpty(style) && STYLE_LIST.contains(style)) {
 			return "modules/postManager/postInput_" + style;
 		} else {

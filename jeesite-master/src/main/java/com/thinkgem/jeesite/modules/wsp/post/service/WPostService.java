@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.CrudService;
-import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
 import com.thinkgem.jeesite.modules.wsp.post.dao.WPostDao;
+import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
 
 /**
  * 帖子Service

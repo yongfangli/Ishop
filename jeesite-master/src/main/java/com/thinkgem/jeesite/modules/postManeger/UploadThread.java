@@ -1,4 +1,4 @@
-package com.thinkgem.jeesite.modules.postManeger.Controller;
+package com.thinkgem.jeesite.modules.postManeger;
 
 import java.io.InputStream;
 

@@ -106,7 +106,7 @@
 				var vm=this;
 				var uploadUrl = "${ctx}" + "/post/postSave";
 				console.info(vm.files);
-				var html=$(".editor").html();
+				var html=$(".editor").text();
 				var encode_html=encodeURIComponent(html);
 				console.info(encode_html);
 				//上传服务器

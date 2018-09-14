@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.token.TokenDao">
+    
+	<sql id="cln">
+	</sql>
+	
+	
+	
+	<select id="getToken" resultType="java.lang.String">
+		SELECT 
+			a.token
+		FROM w_token a
+		<where>
+			TIMESTAMPDIFF(SECOND,a.create_date,now()) &lt; a.expired and code=#{code}
+		</where>		
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_token(
+			token,
+			expired,
+			create_date,
+			code
+		) VALUES (
+			#{token},
+			#{expired},
+			#{createDate},
+			#{code}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_token SET 	
+			token = #{token},
+			expired = #{expired},
+			createDate = #{createDate}
+			
+		WHERE code= #{code}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_token
+		WHERE code= #{code}
+	</update>
+	
+</mapper>
