@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -52,7 +52,7 @@
 		<jdk.version>1.8</jdk.version>
 		<tomcat.version>2.2</tomcat.version>
 		<jetty.version>7.6.14.v20131031</jetty.version>
-		<webserver.port>8181</webserver.port>
+		<webserver.port>80</webserver.port>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<downloadSources>true</downloadSources>
 
@@ -785,7 +785,7 @@
 						</connector>
 					</connectors>
 					<webAppConfig>
-						<contextPath>/${project.artifactId}</contextPath>
+						<contextPath>/</contextPath>
 					</webAppConfig>
 					<systemProperties>
 						<systemProperty>
