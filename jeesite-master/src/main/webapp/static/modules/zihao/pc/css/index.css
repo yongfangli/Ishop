@@ -1,0 +1,147 @@
+body{
+    margin:0;
+    padding:0;
+   // font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+   font-family: 'Open Sans','Microsoft YaHei',"Heiti SC",'STHeiti Light','PMingLiU', sans-serif;
+}
+.header{
+	width:960px;
+	margin:auto;
+}
+.clearfix{
+	    width: 960px;
+    margin: auto;
+    height: 95px;
+}
+.logo{
+	float: left;
+	width:250px;
+}
+.logo img{
+	    width: 110px;
+       height:95px;
+}
+.logo span{
+	    position: absolute;
+        top: 50;
+        color:#ec9512;
+}
+.right{
+	margin-top: 50px;
+     display: flex; 
+    justify-content: space-around;
+	width: 450px;
+	float:right;
+}
+.submit{
+    width: 16px;
+    height: 16px;
+    background: url(../image/search_btn.png) top no-repeat;
+    text-indent: -9999px;
+    border: none;
+    vertical-align: top;
+    margin-top: 5px;
+}
+.search{
+	    width: 200px;
+    font-size: 13px;
+    line-height: 26px;
+    height: 26px;
+    border: none;
+    background: none;
+   
+    
+}
+input{ outline: medium;}
+.searchform{
+	    float: left;
+    padding: 0px 10px;
+    border: #cccccc 1px solid;
+    width: 232px;
+    height: 28px;
+    line-height: 24px;
+    border-radius: 3px;
+    margin-right: 26px;
+}
+.langwrap{
+	position: absolute;
+    width: 80px;
+    right: 100px;
+	    padding: 5px 0;
+	    font-size:0.9rem;
+	        background-color: white;
+    opacity: 1;
+    z-index: 2;
+}
+.lang-select{
+	display:none;
+	    padding: 2;
+	    margin-top: 10px;
+	list-style-type:none;
+	  //  border: 1px solid #ccc;
+	
+}
+.lang-select li{
+	margin-top:10px;
+}
+.triangle{
+    border-top: 5px solid #ec9512;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    position: absolute;
+    top: 13px;
+    right: 10px;
+}
+.nav{
+	width:100%;
+	margin:auto;
+	background:#ec9512;
+}
+.toggle{
+	display:flex;
+	list-style-type:none;
+	justify-content: space-around;
+    align-items: center;
+	    width: 960px;
+    height: 68px;
+    margin:auto;
+   
+ 
+}
+.toggle li{
+	         color: beige;
+    cursor: pointer;
+}
+.toggle li a:hover{
+	color:#e8290a;
+}
+.lang{
+	   color: #ec9512;
+}
+.carousel {
+    width:  1365px !important;
+    }
+.content{
+        margin: auto;
+    width: 100%;
+}
+.bottom{
+     color:#ffffff;
+     font-size:0.9rem;
+     background-color:#ec9512;
+}
+
+
+.contact{
+    display: flex;
+    justify-content: space-around;
+}
+a{
+	color:#ec9512;
+}
+.toggle a{
+	    color: beige;
+  text-decoration:none;
+}
+

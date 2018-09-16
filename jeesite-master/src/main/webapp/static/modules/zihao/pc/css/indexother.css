@@ -1,0 +1,93 @@
+body{
+    margin:0;
+    padding:0;
+    font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+}
+
+.news{
+    width: 1200px;
+    margin:0 auto;
+}
+.notice{
+    float:right;
+    padding: 0px 44px;
+}
+.more{
+    background-color: #e86b12;
+    padding: 2px 2px;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+}
+.noticeList{
+    margin-top:9px;
+}
+.header label{
+    padding: 2px;
+    font-size: 1.0rem;
+    background-color: #e86b12;
+}
+.noticeList li a:hover{
+    cursor:pointer;
+}
+.noticeList li{
+    margin-top:10px;
+}
+ a{
+    text-decoration: none;
+   color:#0a0a0a;
+}
+
+ .detailcontent{
+     padding:40px;
+ }
+.companyDetail{
+    width: 1200px;
+    margin:0 auto;
+}
+.companyProgress{
+    display:flex;
+}
+.perImg{
+    width: 500px;
+    height: 300px;
+}
+.perspect .image{
+    float:right;
+}
+.contactForm{
+    margin-top:20px;
+}
+
+.notice{
+	width: 500px;
+    color:#000000;
+}
+.contactBody{
+   // border-top:4px solid #3e4b6d;
+    padding: 20px 0px;
+    background: #fff;
+    width:600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.contactForm form div{
+    margin-top:20px;
+
+}
+.contactForm form div input{
+	display: inline-block;
+    line-height: 20px;
+    //border-radius:2px;
+}
+.contactForm form div textarea{
+	display: inline-block;
+   border-radius:2px;
+}
+.submit{
+	   background-color: #3e4b6d;
+    color: #fbfbfb;
+}

@@ -31,9 +31,11 @@
     outline: none;
     border: 1px solid #ddd;
     color: #000000;
+    border-radius: 10px;
 }
 
 .clkb{
+	border-radius: 10px;
 	 padding: 5px;
     background: #cceef9;
     outline: none;
@@ -74,13 +76,26 @@
 	margin-top: -40px;
 }
 .bottom{
-	display:flex;
-	position: fixed;
-    bottom: 0px;
-    width: 100%;
-    background: #cceef9;
-       justify-content: center;
+	display: flex;
+    justify-content: center;
     align-items: center;
+    bottom: 0px;
+    position: fixed;
+    right: 0;
+    left: 0;
+    max-width: 800px;
+    background: #cceef9;
     height: 30px;
     text-align: center;
+    border-radius: 10px;
+}
+.wlink{
+	float: right;
+    text-decoration: none;
+    background: #cceef9;
+    color: #0c0c0c;
+    padding: 4px;
+    border-radius: 10px;
+    margin-left: 10px;
+    font-size: 0.9rem;
 }

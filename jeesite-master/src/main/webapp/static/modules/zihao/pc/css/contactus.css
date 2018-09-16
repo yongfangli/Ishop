@@ -1,0 +1,36 @@
+.contactForm{
+    margin-top:20px;
+}
+
+.notice{
+	width: 500px;
+    color:#000000;
+}
+.contactBody{
+    padding: 20px 0px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.contactForm form div{
+    margin-top:20px;
+
+}
+.contactForm form div input{
+	display: inline-block;
+    line-height: 20px;
+    //border-radius:2px;
+}
+.contactForm form div textarea{
+	display: inline-block;
+   border-radius:2px;
+}
+.submit1{
+	   background-color: #3e4b6d;
+    color: #fbfbfb;
+}
+.content{
+	padding:40px 0;
+}

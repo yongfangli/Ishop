@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.mybusiness.companyprogress.dao.CompanyProgressDao">
+    
+	<sql id="companyProgressColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.content AS "content",
+		a.company_id AS "company.id",
+		a.happen_date AS "happenDate",
+		o.name AS "company.name"
+	</sql>
+	
+	<sql id="companyProgressJoins">
+	left join sys_office o on o.id=a.company_id
+	</sql>
+    
+	<select id="get" resultType="CompanyProgress">
+		SELECT 
+			<include refid="companyProgressColumns"/>
+		FROM zh_company_progress a
+		<include refid="companyProgressJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CompanyProgress">
+		SELECT 
+			<include refid="companyProgressColumns"/>
+		FROM zh_company_progress a
+		<include refid="companyProgressJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="company != null and company.id != '' and company.id !=null">
+				AND a.company_id = #{company.id}
+			</if>
+			<if test="happenDate != null and happenDate != ''">
+				AND a.happen_date &gt;= #{happenDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CompanyProgress">
+		SELECT 
+			<include refid="companyProgressColumns"/>
+		FROM zh_company_progress a
+		<include refid="companyProgressJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO zh_company_progress(
+			id,
+			title,
+			content,
+			company_id,
+			happen_date
+		) VALUES (
+			#{id},
+			#{title},
+			#{content},
+			#{company.id},
+			#{happenDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE zh_company_progress SET 	
+			title = #{title},
+			content = #{content},
+			company_id = #{company.id},
+			happen_date = #{happenDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM zh_company_progress
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

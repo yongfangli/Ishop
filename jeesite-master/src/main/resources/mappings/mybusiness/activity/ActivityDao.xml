@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.mybusiness.activity.dao.ActivityDao">
+    
+	<sql id="activityColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.img AS "img",
+		a.address AS "address",
+		a.start_time AS "startTime",
+		a.content AS "content",
+		a.end_time AS "endTime"
+	</sql>
+	
+	<sql id="activityJoins">
+	</sql>
+    
+	<select id="get" resultType="Activity">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM zh_activity a
+		<include refid="activityJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Activity">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM zh_activity a
+		<include refid="activityJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Activity">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM zh_activity a
+		<include refid="activityJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO zh_activity(
+			id,
+			name,
+			img,
+			address,
+			start_time,
+			content,
+			end_time
+		) VALUES (
+			#{id},
+			#{name},
+			#{img},
+			#{address},
+			#{startTime},
+			#{content},
+			#{endTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE zh_activity SET 	
+			name = #{name},
+			img = #{img},
+			address = #{address},
+			start_time = #{startTime},
+			content = #{content},
+			end_time = #{endTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM zh_activity
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

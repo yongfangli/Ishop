@@ -1,0 +1,26 @@
+.contents{
+    width:1100px;
+   margin:0 auto;
+}
+h3{
+    text-align:center;
+}
+.attr{
+    display: flex;
+    justify-content:space-evenly;
+    font-size: 0.84rem;
+}
+.detail{
+    padding:0 auto;
+    margin-top:5px;
+
+}
+
+.header{
+    font-size: 1.2rem;
+    color:#71710d;
+}
+.contents .newstitle{
+    text-align:center;
+    color:#000000 !important;
+}

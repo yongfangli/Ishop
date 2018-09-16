@@ -19,7 +19,7 @@ public class WPost extends DataEntity<WPost> {
 	private String content;		// content
 	private String fileIds;		// file_ids
 	private WUser user;		// belongUser
-	
+	private String createDateStr; //datestr
 	public WPost() {
 		super();
 	}
@@ -53,5 +53,15 @@ public class WPost extends DataEntity<WPost> {
 	public void setUser(WUser user) {
 		this.user = user;
 	}
+
+	public String getCreateDateStr() {
+		return createDateStr;
+	}
+
+	public void setCreateDateStr(String createDateStr) {
+		this.createDateStr = createDateStr;
+	}
+
+
 	
 }

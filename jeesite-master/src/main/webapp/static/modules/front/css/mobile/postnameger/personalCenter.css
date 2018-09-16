@@ -1,6 +1,7 @@
     *{
         margin:0;
         padding:0;
+           color: #5d5a5a;
     }
     
 #app{
@@ -13,29 +14,88 @@
 .content{
     margin-top: 10px;
     padding-top: 10px;
-    border: 1px solid #f9f1f1;
- 
+        scroll-behavior: smooth;
+    overflow-y: scroll;
+    max-height: 560px;
+        border-top: 1px solid #ddd;
 }
+  .content::-webkit-scrollbar {
+        display: none;
+ }  
 .portrait{
-    border-radius: 39px;
-    width: 80px;
-    border: 1px solid #e0cdcd;
+   width: 100px;
 }
 .data-list{
     text-align: center;
     list-style-type: none;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 .item{
-	width: 45%;
+	animation: facade 2s;
+    width: 100%;
     margin-left: 10px;
     margin-top: 20px;
+    border-bottom: 1px solid #f1f1f1
+}
+.grid{
+	animation: facade1 2s;
+	width:40% !important;
+	 margin-left: 10px;
+    margin-top: 20px;
+}
+.grid img{
+	height: 100px;
+    width: 130px;
 }
 .item img{
-	height: 80px;
-    width: 100px;
+	height: 100px;
+    width: 130px;
 }
 .text{
+	    text-align: left;
 	font-size: 0.9rem;
+}
+.emdata{
+	display: block;
+    font-size: 0.9rem;
+    margin-top: 15px;
+}
+.date{
+	float: right;
+	    font-style: normal;
+}
+.toggle{
+    height: 20px;
+    width: 50px;
+    border: 1px solid #dddddd;
+    /* background: gray; */
+    float: right;
+    cursor:pointer;
+}
+.operate{ 
+	    padding: 12px 0;
+}
+.toggle i{
+	display:inline-block;
+	width: 25px;
+    height: 20px;
+}
+.tog{
+   background: #cceef9;
+}
+ul{
+	list-style-type:none;
+}
+
+@keyframes facade
+{
+from {opacity:0;}
+to {opacity:1;}
+}
+@keyframes facade1
+{
+from {opacity:0;}
+to {opacity:1;}
 }

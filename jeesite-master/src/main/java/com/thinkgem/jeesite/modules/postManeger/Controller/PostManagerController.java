@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.h2.util.New;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsCriteria;
@@ -33,6 +34,7 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.UserAgentUtils;
+import com.thinkgem.jeesite.modules.cms.utils.RelativeDateFormat;
 import com.thinkgem.jeesite.modules.postManeger.cost.AjaxReturn;
 import com.thinkgem.jeesite.modules.postManeger.cost.UserType;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
@@ -75,11 +77,21 @@ public class PostManagerController extends MyBaseController {
 	@RequestMapping(value = "uploadFile")
 	public Map<String, Object> uploadFile(MultipartFile file) throws IOException {
 		Map<String, Object> resultMap = new HashMap<>();
+		//只能上传视频和图片
+		if(file.getContentType().contains("image")||file.getContentType().contains("video")) {
+			GridFSFile gridfile = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(),
+					file.getContentType(), null);
+			String fileId = String.valueOf(gridfile.getId());
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
+			resultMap.put(AjaxReturn.DATA, fileId);
+		}else {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "文件格式不对");
+		}
+		
 		GridFSFile gridfile = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(),
 				file.getContentType(), null);
-		String fileId = String.valueOf(gridfile.getId());
-		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
-		resultMap.put(AjaxReturn.DATA, fileId);
+	
 		return resultMap;
 	}
 
@@ -215,10 +227,26 @@ public class PostManagerController extends MyBaseController {
 		Map<String, Object> resultMap = new HashMap<>();
 		WPost wPost = new WPost();
 		wPost.setUser(user);
-		Page<WPost> page = new Page(1, 6);
+		//添加排序
+	    //page.orderBy
+		
+		Page<WPost> page = new Page(pageNo, 8);
 		page = postService.findPage(page, wPost);
+
+		page.getTotalPage();
+		if(pageNo>page.getLast()) {
+			resultMap.put(AjaxReturn.DATA, new ArrayList<>());
+			resultMap.put("last",true);
+		}else {
+			for (WPost o : page.getList()) {
+				o.setCreateDateStr(RelativeDateFormat.format(o.getCreateDate()));
+			}
+			resultMap.put(AjaxReturn.DATA, page.getList());
+			resultMap.put("last",false);
+		}
+		
 		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
-		resultMap.put(AjaxReturn.DATA, page.getList());
+	    
 		return resultMap;
 	}
 }

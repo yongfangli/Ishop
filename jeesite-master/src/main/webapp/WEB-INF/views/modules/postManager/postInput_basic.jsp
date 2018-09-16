@@ -4,17 +4,30 @@
 <html>
 <head>
 <%@include file="/WEB-INF/views/include/webHead.jsp"%>
-<link	href="${ctxStatic}/modules/front/css/mobile/postnameger/postInput.css"	type="text/css" rel="stylesheet" />
 <meta charset="utf-8">
+<link	href="${ctxStatic}/modules/front/css/mobile/postnameger/postInput.css"	type="text/css" rel="stylesheet" />
+
 <link	href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"	rel="stylesheet">
 <title>帖子录入</title>
 <style>
+@keyframes myfirst
+{
+from {opacity: 0;}
+to {opacity: 1;}
+}
+
+
 </style>
 </head>
 
 <body>
-
+    
 	<div id="app">
+	    <div id="alert" class="hid">信息提示</div>
+	    <div>
+	    <a  class="wlink" href="${ctx}/post/personalCenter" >我的帖子</a>
+	    
+	    </div>
 	    
 		<div class="buttong">
 			<input class="clkb" type="button" value="基本版" @click="changeStyle(1)" />
@@ -46,6 +59,7 @@
 <script>
 	var reg = /^\S*\.(?:png|jpe?g|bmp|gif)$/;
 	var patrn = /\w+(.flv|.rvmb|.mp4|.avi|.wmv)$/;
+	
 	var vm = new Vue({
 		el : '#app',
 		data : {
@@ -58,11 +72,14 @@
 			changeStyle : function(val) {
 				var vm = this;
 				if (val == 1) {
-					window.location.href = "${ctx}"
-							+ "/post/postInput?style=basic";
+					window.location.href = "${ctx}"	+ "/post/postInput?style=basic";
 				} else if (val == 2) {
 					window.location.href = "${ctx}" + "/post/postInput";
 				}
+			},
+			test:function(){
+				Msg.setMsg("msg");
+				Msg.show();
 			},
 			showFileAndUpload : function(e) {
 				var vm = this;
@@ -119,6 +136,7 @@
 				formData.append('content',encode_html);
 				vm.$http.post(uploadUrl, formData).then(function(res) {
 					if(res.data.status=='success'){
+                        Msg.show("发布成功!");
 						window.location.href = "${ctx}"
 							+ "/post/personalCenter";
 					}else{

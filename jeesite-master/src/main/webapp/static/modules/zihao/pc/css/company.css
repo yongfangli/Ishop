@@ -1,0 +1,21 @@
+.innercontent{
+	width:900px;
+	margin:auto;
+	color:#272525;
+}
+.innercontent p{
+	color:#666666;
+}
+dd {
+	color:#666666;
+    margin-left: 225px;
+    margin-top: -50px;
+}
+dt{
+	color:#666666;
+	    margin-top: 40px;
+    text-align: right;
+    width: 150px;
+        border-right: 2px solid #eaabab;
+    padding-right: 30px;
+}

@@ -104,7 +104,12 @@ public class Global {
 	public static String getAdminPath() {
 		return getConfig("adminPath");
 	}
-
+	/**
+	 * 获取子浩官网路径
+	 */
+	public static String getZihaoPath(){
+		return getConfig("zihao");
+	}
 	/**
 	 * 获取前台基路径
 	 */
