@@ -28,6 +28,14 @@
   
     <function>
     <description>获取网站路径</description>
+    <name>getZihaoPath</name>
+    <function-class>com.thinkgem.jeesite.common.config.Global</function-class>
+    <function-signature>java.lang.String getZihaoPath()</function-signature>
+    <example>${fns:getZihaoPath()}</example>
+  </function>
+  
+    <function>
+    <description>获取网站路径</description>
     <name>geWebBasePath</name>
     <function-class>com.thinkgem.jeesite.common.config.Global</function-class>
     <function-signature>java.lang.String getWebBasePath()</function-signature>
