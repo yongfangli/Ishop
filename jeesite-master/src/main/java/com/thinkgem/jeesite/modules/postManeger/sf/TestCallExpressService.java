@@ -1,4 +1,4 @@
-﻿package com.thinkgem.jeesite.modules.postManeger.sf;
+﻿/*package com.thinkgem.jeesite.modules.postManeger.sf;
 
 
 import java.io.FileInputStream;
@@ -45,7 +45,7 @@ public class TestCallExpressService {
          }			
 	}
 	
-	/*********************标准返回报文参考*****************************/
+	*//*********************标准返回报文参考*****************************//*
 	//1.下订单-请求返回结果
 	// <?xml version='1.0' encoding='UTF-8'?><Response service="OrderService"><Head>OK</Head><Body><OrderResponse filter_result="2" destcode="020" mailno="444000010085" origincode="755" orderid="QIAO-20171017001"/></Body></Response>
 
@@ -71,3 +71,4 @@ public class TestCallExpressService {
 	
 
 }
+*/
