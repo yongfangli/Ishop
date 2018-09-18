@@ -17,11 +17,12 @@
     </c:if>
     <c:if test="${user.portrait !='' && user.portrait != null}">
     <img class="portrait" src="${ctx}/post/file/${user.portrait}" />
+     <div class="rig">
+     <span><label>昵称:</label><i>一个不能少</i></p>
+     </div>
     </c:if>
      </div>
-    <div class="rig">
     
-    </div>
      </div>
      <div class="operate"><span  class="toggle" title='改变列表样式'><i class="toggle1 tog" @click='toggle(event)'></i><i class="toggle2" @click='toggle(event)'></i></span></div>
      <div class="content" @scroll="scroll(event)">
@@ -30,7 +31,7 @@
      <li v-bind:class="liclass">
      <p class="text">{{option.content}}</p>
      <span class="emdata"><i class='date'>{{option.createDateStr}}</i></span>
-     <ul>
+     <ul class='imglist'>
      <li>
      <img v-if="option.fileIds!=''" :src="'${ctx}/post/file/'+option.fileIds" /> 
      </li>
@@ -71,7 +72,6 @@ var personl=new Vue({
 			　　if(scrollTop + windowHeight >= scrollHeight){
 			    vm.pageNo++;
 			    this.getData();
-			  
 		}
 	 },
 	 getData:function(){
@@ -102,7 +102,6 @@ var personl=new Vue({
 		 if(i.hasClass('tog')){
 			 i.removeClass('tog').siblings().addClass('tog');
 				 if(vm.liclass=='item') {
-					 
 					 vm.liclass='grid';
 				 }else{
 					 vm.liclass='item';
