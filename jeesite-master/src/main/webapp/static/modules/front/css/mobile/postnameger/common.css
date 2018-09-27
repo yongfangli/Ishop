@@ -1,0 +1,32 @@
+.operate{ 
+	    text-align: right;
+	    height: 20px;
+	        margin-top: 10px;
+}
+.toggle i{
+	border-radius: 10px;
+	display:inline-block;
+	width: 25px;
+    height: 20px;
+}
+.tog{
+   background: #cceef9;
+}
+.toggle{
+	display: inline-block;
+    height: 20px;
+    width: 50px;
+    border: 1px solid #dddddd;
+    border-bottom: none;
+    cursor:pointer;
+    border-radius: 20px;
+    
+}
+.toggle1{
+	    border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+}
+.toggle2{
+	    border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+}

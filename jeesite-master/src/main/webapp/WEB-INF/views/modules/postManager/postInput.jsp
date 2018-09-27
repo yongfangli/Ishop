@@ -18,10 +18,7 @@
 <body>
 
 <div class="" id="app">
-<div class="buttong">
-    <input class="clkb" type="button" value="基本版" @click="changeStyle(1)"/>
-     <input class="clkb" type="button" value="高级版" @click="changeStyle(2)"/>
-    </div>
+ <div class="operate"><span  class="toggle" title='更换编辑器版本'><i class="toggle1" @click='changeStyle(1)'></i><i class="toggle2  tog" @click='changeStyle(2)'></i></span></div>
 <vue-html5-editor :content="content" :height="300"></vue-html5-editor>
 <div class="bottom" @click="">发布</div>
 </div>
@@ -170,9 +167,9 @@ new Vue({
     	 changeStyle:function(val){
          	var vm=this;
          	if(val==1){
-         		window.location.href="${ctx}"+"/post/postInput?style=basic";
+         		return;
          	}else if(val==2){
-         		window.location.href="${ctx}"+"/post/postInput";
+         		window.location.href = "${ctx}"	+ "/post/postInput?style=basic";
          	}
          }
     }

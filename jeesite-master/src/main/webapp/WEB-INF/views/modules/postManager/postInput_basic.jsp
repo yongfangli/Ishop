@@ -9,15 +9,6 @@
 
 <link	href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"	rel="stylesheet">
 <title>帖子录入</title>
-<style>
-@keyframes myfirst
-{
-from {opacity: 0;}
-to {opacity: 1;}
-}
-
-
-</style>
 </head>
 
 <body>
@@ -25,14 +16,11 @@ to {opacity: 1;}
 	<div id="app">
 	    <div id="alert" class="hid">信息提示</div>
 	    <div>
+	     <a  class="wlink" href="${ctx}/index.html" >返回首页</a>
 	    <a  class="wlink" href="${ctx}/post/personalCenter" >我的帖子</a>
 	    
 	    </div>
-	    
-		<div class="buttong">
-			<input class="clkb" type="button" value="基本版" @click="changeStyle(1)" />
-			<input class="clkb" type="button" value="高级版" @click="changeStyle(2)" />
-		</div>
+	     <div class="operate"><span  class="toggle" title='更换编辑器版本'><i class="toggle1 tog" @click='changeStyle(1)'></i><i class="toggle2 " @click='changeStyle(2)'></i></span></div>
 		<div class="editor"  contenteditable="true"></div>
 		<div class="upload">
 			<embed src="${ctxStatic}/images/addfile.svg" type="image/svg+xml" />
@@ -72,9 +60,9 @@ to {opacity: 1;}
 			changeStyle : function(val) {
 				var vm = this;
 				if (val == 1) {
-					window.location.href = "${ctx}"	+ "/post/postInput?style=basic";
+					window.location.href="${ctx}"+"/post/postInput";
 				} else if (val == 2) {
-					window.location.href = "${ctx}" + "/post/postInput";
+					return;
 				}
 			},
 			test:function(){
@@ -140,7 +128,7 @@ to {opacity: 1;}
 						window.location.href = "${ctx}"
 							+ "/post/personalCenter";
 					}else{
-						
+						 Msg.show(res.data.msg);
 					}
 				}, function(res) {
 					alert(res.status)

@@ -4,11 +4,15 @@ var Msg={
 			$("#alert").empty().html(msg);
 		},
 		show:function(msg){
+			  var t;
 			this.setMsg(msg);
 			$("#alert").removeClass("hid").addClass("show");
-		},
-		hid:function(){
-			$("#alert").removeClass("show").addClass("hid");
+		    window.clearTimeout(t);
+		  
+		   t= window.setTimeout(  function(){
+		    	 $("#alert").removeClass("show").addClass("hid");
+		     },1500);
+		 
 		}
 		
 	}

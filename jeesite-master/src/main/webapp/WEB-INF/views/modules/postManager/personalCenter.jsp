@@ -31,14 +31,29 @@
      <li v-bind:class="liclass">
      <p class="text">{{option.content}}</p>
      <span class="emdata"><i class='date'>{{option.createDateStr}}</i></span>
+    
      <ul class='imglist'>
-     <li>
-     <img v-if="option.fileIds!=''" :src="'${ctx}/post/file/'+option.fileIds" /> 
+      <template v-if="option.files" v-for="f in option.files">
+     <li class="fileli">
+        <template v-if="f.contenttype.indexOf('image')!=-1">
+         <img  :src="'${ctx}/post/file/'+f.fileid" /> 
+         </template>
+        <template v-else>
+           <video class="vid" class="video"
+						controls="controls">
+						<source v-bind:src="'${ctx}/post/file/'+f.fileid">
+					</video>
+        </template>
      </li>
+     </template>
       </ul> 
+      
      </li>
      </template>
      </ul>
+     </div>
+      <div v-if="showpic" class="showimg">
+      <img  src="${ctxStatic}/1.jpg">
      </div>
 </div>
 
@@ -53,6 +68,7 @@ var personl=new Vue({
 		pageNo:1,
 		last:false,
 		liclass:'item',//grid
+		showpic:false,
 	},
 	created:function(){
 		this.getData();

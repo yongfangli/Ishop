@@ -3,7 +3,11 @@
  */
 package com.thinkgem.jeesite.modules.wsp.post.entity;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.Length;
+
+import com.thinkgem.jeesite.modules.wsp.file.entity.WFile;
 import com.thinkgem.jeesite.modules.wsp.user.entity.WUser;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
@@ -20,6 +24,7 @@ public class WPost extends DataEntity<WPost> {
 	private String fileIds;		// file_ids
 	private WUser user;		// belongUser
 	private String createDateStr; //datestr
+	private List<WFile> files;
 	public WPost() {
 		super();
 	}
@@ -60,6 +65,14 @@ public class WPost extends DataEntity<WPost> {
 
 	public void setCreateDateStr(String createDateStr) {
 		this.createDateStr = createDateStr;
+	}
+
+	public List<WFile> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<WFile> files) {
+		this.files = files;
 	}
 
 

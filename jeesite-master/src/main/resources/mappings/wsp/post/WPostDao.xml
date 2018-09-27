@@ -1,43 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thinkgem.jeesite.modules.wsp.post.dao.WPostDao">
-    
+<mapper
+	namespace="com.thinkgem.jeesite.modules.wsp.post.dao.WPostDao">
+	<resultMap id="wpostResult" type="WPost">
+		<id property="id" column="id" />
+		<result property="content" column="content" />
+		<result property="user.id" column="user.id" />
+		<result property="createDate" column="createDate" />
+		<result property="updateDate" column="updateDate" />
+		<collection property="files" ofType="WFile">
+			<result property="fileid" column="files.fileid" />
+			<result property="contenttype"
+				column="files.contentType" />
+			<result property="size" column="files.size" />
+		</collection>
+	</resultMap>
 	<sql id="wPostColumns">
 		a.id AS "id",
 		a.content AS "content",
-		a.file_ids AS "fileIds",
+		a.file_ids AS
+		"fileIds",
 		a.user_id AS "user.id",
 		a.create_date AS "createDate",
-		a.update_date AS "updateDate"
+		a.update_date AS "updateDate",
+		f.fileId AS "files.fileid",
+		f.contentType AS "files.contentType",
+		f.size AS "files.size"
 	</sql>
-	
+
 	<sql id="wPostJoins">
-		LEFT JOIN w_user u ON u.id = a.user_id
+		LEFT JOIN w_upload_file f ON f.targetId=a.id
+		LEFT JOIN w_user u ON u.id =
+		a.user_id
 	</sql>
-    
-	<select id="get" resultType="WPost">
-		SELECT 
-			<include refid="wPostColumns"/>
+
+	<select id="get" resultMap="wpostResult">
+		SELECT
+		<include refid="wPostColumns" />
 		FROM w_post a
-		<include refid="wPostJoins"/>
+		<include refid="wPostJoins" />
 		WHERE a.id = #{id}
 	</select>
-	
-	<select id="findList" resultType="WPost">
-		SELECT 
-			<include refid="wPostColumns"/>
+
+	<select id="findList" resultMap="wpostResult">
+		SELECT
+		<include refid="wPostColumns" />
 		FROM w_post a
-		<include refid="wPostJoins"/>
+		<include refid="wPostJoins" />
 		<where>
-			<if test="user != null and user.firstIp != '' and user.firstIp != null">
-			    u.first_ip=#{user.firstIp}
+			<if
+				test="user != null and user.firstIp != '' and user.firstIp != null">
+				u.first_ip=#{user.firstIp}
 			</if>
 			<if test="user != null and user.id != '' and user.id != null">
-			   and  u.id=#{user.id}
+				and u.id=#{user.id}
 			</if>
 		</where>
 		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+			<when
+				test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
@@ -45,17 +66,18 @@
 			</otherwise>
 		</choose>
 	</select>
-	
-	<select id="findAllList" resultType="WPost">
-		SELECT 
-			<include refid="wPostColumns"/>
+
+	<select id="findAllList" resultMap="wpostResult">
+		SELECT
+		<include refid="wPostColumns" />
 		FROM w_post a
-		<include refid="wPostJoins"/>
+		<include refid="wPostJoins" />
 		<where>
-			
-		</where>		
+
+		</where>
 		<choose>
-			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+			<when
+				test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
@@ -63,37 +85,37 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO w_post(
-			id,
-			content,
-			file_ids,
-			user_id,
-			create_date,
-			update_date
+		id,
+		content,
+		file_ids,
+		user_id,
+		create_date,
+		update_date
 		) VALUES (
-			#{id},
-			#{content},
-			#{fileIds},
-			#{user.id},
-			#{createDate},
-			#{updateDate}
+		#{id},
+		#{content},
+		#{fileIds},
+		#{user.id},
+		#{createDate},
+		#{updateDate}
 		)
 	</insert>
-	
+
 	<update id="update">
-		UPDATE w_post SET 	
-			content = #{content},
-			file_ids = #{fileIds},
-			user_id = #{user.id},
-			update_date = #{updateDate}
+		UPDATE w_post SET
+		content = #{content},
+		file_ids = #{fileIds},
+		user_id = #{user.id},
+		update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>
-	
+
 	<update id="delete">
 		DELETE FROM w_post
 		WHERE id = #{id}
 	</update>
-	
+
 </mapper>

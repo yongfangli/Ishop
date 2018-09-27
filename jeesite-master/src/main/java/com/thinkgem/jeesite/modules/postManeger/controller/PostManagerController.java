@@ -1,4 +1,4 @@
-package com.thinkgem.jeesite.modules.postManeger.Controller;
+package com.thinkgem.jeesite.modules.postManeger.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,8 +35,10 @@ import com.mongodb.gridfs.GridFSFile;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.UserAgentUtils;
 import com.thinkgem.jeesite.modules.cms.utils.RelativeDateFormat;
+import com.thinkgem.jeesite.modules.postManeger.baiduApi.service.TextService;
 import com.thinkgem.jeesite.modules.postManeger.cost.AjaxReturn;
 import com.thinkgem.jeesite.modules.postManeger.cost.UserType;
+import com.thinkgem.jeesite.modules.wsp.file.service.WFileService;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
 import com.thinkgem.jeesite.modules.wsp.post.service.WPostService;
 import com.thinkgem.jeesite.modules.wsp.user.entity.WUser;
@@ -51,9 +53,12 @@ public class PostManagerController extends MyBaseController {
 
 	@Autowired
 	private WPostService postService;
-
+	@Autowired
+	private TextService textService;
 	@Autowired
 	private WUserService userService;
+	@Autowired
+	private WFileService fileService;
 
 	public static final List STYLE_LIST = new ArrayList();
 	static {
@@ -62,8 +67,6 @@ public class PostManagerController extends MyBaseController {
 
 	@RequestMapping(value = "postInput")
 	public String goPostInput(Model model, String style) {
-		//测试文本是否包含一些不法言论
-		
 		
 		if (StringUtils.isNotEmpty(style) && STYLE_LIST.contains(style)) {
 			return "modules/postManager/postInput_" + style;
@@ -91,7 +94,6 @@ public class PostManagerController extends MyBaseController {
 		
 		GridFSFile gridfile = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(),
 				file.getContentType(), null);
-	
 		return resultMap;
 	}
 
@@ -100,8 +102,15 @@ public class PostManagerController extends MyBaseController {
 	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content)
 			throws IOException {
 		Map<String, Object> resultMap = new HashMap<>();
+		
 		if (com.thinkgem.jeesite.common.utils.StringUtils.isNoneBlank(content)) {
 			content = URLDecoder.decode(content, "utf-8");
+		}
+		//测试文本是否包含一些不法言论
+		if(StringUtils.isNotEmpty(content)&&!textService.validateText(content)) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG,"文本包含不法言论");
+			return resultMap;
 		}
 		String ip = getRequest().getRemoteHost();
 		// 用户处理
@@ -127,21 +136,18 @@ public class PostManagerController extends MyBaseController {
 		WPost post = new WPost();
 		post.setContent(content);
 		post.setUser(getCurrentUser());
-
-		String fileStr = "";
-		if (null != files && files.length > 0) {
+		post.setCreateDate(new Date(System.currentTimeMillis()));
+		post.setUpdateDate(new Date(System.currentTimeMillis()));
+		if(StringUtils.isNotBlank(post.getContent())||(null != files && files.length > 0)) {
+			postService.save(post);
+		}
+		if (null != files && files.length > 0&&StringUtils.isNoneBlank(post.getId())) {
 			for (MultipartFile multipartFile : files) {
 				GridFSFile gridfile = gridFsTemplate.store(multipartFile.getInputStream(),
 						multipartFile.getOriginalFilename(), multipartFile.getContentType(), null);
 				String fileId = String.valueOf(gridfile.getId());
-				fileStr = fileStr + fileId + ",";
+				fileService.save(fileId, post.getId(), multipartFile.getContentType(), multipartFile.getSize());
 			}
-		}
-		post.setFileIds(fileStr);
-		post.setCreateDate(new Date(System.currentTimeMillis()));
-		post.setUpdateDate(new Date(System.currentTimeMillis()));
-		if(StringUtils.isNotBlank(post.getContent())||StringUtils.isNoneBlank(post.getFileIds())) {
-			postService.save(post);
 		}
 		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
 		return resultMap;

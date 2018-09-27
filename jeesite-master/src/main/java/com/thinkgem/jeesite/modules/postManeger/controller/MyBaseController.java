@@ -1,4 +1,4 @@
-package com.thinkgem.jeesite.modules.postManeger.Controller;
+package com.thinkgem.jeesite.modules.postManeger.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

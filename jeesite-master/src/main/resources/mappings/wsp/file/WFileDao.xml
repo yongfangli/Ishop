@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.file.dao.WFileDao">
+    
+	<sql id="wFileColumns">
+		a.id AS "id",
+		a.fileid AS "fileid",
+		a.targetid AS "targetid",
+		a.contenttype AS "contenttype",
+		a.size AS "size"
+	</sql>
+	
+	<sql id="wFileJoins">
+	</sql>
+    
+	<select id="get" resultType="WFile">
+		SELECT 
+			<include refid="wFileColumns"/>
+		FROM w_upload_file a
+		<include refid="wFileJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WFile">
+		SELECT 
+			<include refid="wFileColumns"/>
+		FROM w_upload_file a
+		<include refid="wFileJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WFile">
+		SELECT 
+			<include refid="wFileColumns"/>
+		FROM w_upload_file a
+		<include refid="wFileJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_upload_file(
+			id,
+			fileid,
+			targetid,
+			contenttype,
+			size
+		) VALUES (
+			#{id},
+			#{fileid},
+			#{targetid},
+			#{contenttype},
+			#{size}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_upload_file SET 	
+			fileid = #{fileid},
+			targetid = #{targetid},
+			contenttype = #{contenttype},
+			size = #{size}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_upload_file
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
