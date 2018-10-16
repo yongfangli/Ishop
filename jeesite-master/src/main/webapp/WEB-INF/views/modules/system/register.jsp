@@ -18,10 +18,10 @@
     <form id="register">
     <div class="cln"><div class="lab">手机号：</div><div class="rig"><input v-model="phone" type="text" class="ipt" @change="checkPhone(event)"/><span class="notice">&nbsp*</span></div></div>
     <div class="cln"><div class="lab">邮箱：</div><div class="rig"><input  v-model="email" type="text"  class="ipt"  @change="checkEmail(event)"/><span class="notice">&nbsp*</span></div></div>
-    <div class="cln"><div class="lab">昵称：</div><div class="rig"><input  v-model="nickname" type="text" class="ipt"/><span class="notice">&nbsp*</span></div></div>
+    <div class="cln"><div class="lab">昵称：</div><div class="rig"><input  v-model="nickname" type="text" class="ipt" @change="checkNickname(event)"/><span class="notice">&nbsp*</span></div></div>
     <div class="cln"><div class="lab">密码：</div><div class="rig"><input  v-model="password" type="password" class="ipt" @change="checkPassword(event)"/><span style="display: block; text-align: center;" class="notice">&nbsp*(至少6位字母或者数字)</span></div></div>
     <div class="cln"><div class="lab">重复密码：</div><div class="rig"><input  v-model="repassword" type="password" class="ipt" @change="checkRepassword(event)"/><span class="notice"></span></div></div>
-    <div class="cln"><div class="lab">检验码：</div><div class="rig"><input  v-model="code" type="text" class="ipt code" @change="checkCode(event)"/><span v-show="showTime" class="time">{{time}}</span><span class="notice">&nbsp*</span></div></div>
+    <div class="cln"><div class="lab">检验码：</div><div class="rig"><input  v-model="code" type="text" class="ipt code" @change="checkCode(event)"/><span v-show="showTime" class="time">{{time}}</span><img v-show="showFlush" class="flush" @click="flush" src="${ctxStatic}/images/flush.png"/><span class="notice">&nbsp*</span></div></div>
     <div class="cln txtcet"><input class="submt" type="button" @click="submit" value="提交"/></div>
     </form>
 </div>
@@ -31,27 +31,61 @@ var register=new Vue({
 	el:"#app",
 	data:{
 		showTime:false,
+		showFlush:false,
 		time:120,
 		phone:'',
 		email:'',
 		nickname:'',
 		password:'',
-		password:'',
 		repassword:'',
 		code:'',
 		isPhone:false,
 		isEmail:false,
+		isnickName:false,
 		isPassword:false,
+		isCode:false,
+		 date:null,
 	},
 	methods:{
 		submit:function(){
 			var vm=this;
-			if(vm.phone==''){
+			if(!vm.isPhone){
 				Msg.show("请输入手机号！");
-				$(e.target).focus();
+				return;
+			}else if(!vm.isEmail){
+				Msg.show("请输入邮箱！");
 				return;
 			}
-			return ;
+			else if(!vm.isPassword){
+				Msg.show("请输入密码！");
+				return;
+			}else if(!vm.isnickName){
+				Msg.show("请输入昵称！");
+				return;
+			}else if(!vm.isCode){
+				Msg.show("请输入验证码！");
+				return;
+			}else{
+				var loginurl='${ctx}'+'/system/register';
+				vm.$http.post(loginurl,{
+					'phone':vm.phone,
+					'email':vm.email,
+					'nickName':vm.nickname,
+					'validateCode':vm.code,
+					'password':vm.password,
+					'repassword':vm.repassword
+			},{
+				emulateJSON: true
+			}).then(function(res) {
+					if(res.data.status=='success'){
+						 
+					}else{
+						 Msg.show(res.data.msg);
+					}
+				}, function(res) {
+					 Msg.show(res.data.msg);
+				});
+			}
 		},
 		checkPhone : function(e){
 			var vm=this;
@@ -61,7 +95,7 @@ var register=new Vue({
 				vm.phone='';
 				$(e.target).focus();
 			}else{
-				isPhone=true;
+				vm.isPhone=true;
 			}
 		},
 		checkEmail: function(e){
@@ -72,18 +106,34 @@ var register=new Vue({
 				vm.email='';
 				$(e.target).focus();
 			}else{
+				//发送验证码
+				  
+				vm.sendMsg();
 				Msg.show("已将验证码发到你的邮箱!");
 				vm.isEmail=true;
 				vm.showTime=true;
-			    var date=setInterval(function(){
+				vm.showFlush=false;
+				vm.time=120;
+				clearInterval(vm.date);
+				vm.date=setInterval(function(){
 				  if(vm.time>0){
 					   vm.time--;
+				   }else{
+					   vm.showFlush=true;
 				   }
 			   },1000);
 			}
 		},
 		checkCode:function(e){
-			
+			var vm=this;
+			if(vm.code!=''){
+				vm.isCode=true;
+			}else{
+				Msg.show("请输入6位数的验证码！");
+				vm.codee='';
+				vm.isCode=false;
+				$(e.target).focus();
+			}
 		},
 		checkPassword:function(e){
 			var vm=this;
@@ -102,21 +152,53 @@ var register=new Vue({
 				vm.repassword='';
 				$(e.target).focus();
 			}else{
-				isPassword=true;
+				vm.isPassword=true;
+			}
+		},
+		checkNickname:function(){
+			var vm=this;
+			if(vm.nickname!=''){
+				vm.isnickName=true;
+			}else{
+				Msg.show("请输入昵称！");
+				vm.nickname='';
+				$(e.target).focus();
 			}
 		},
 		sendMsg:function(){
 			var vm=this;
 			var codeurl="${ctx}/system/code";
-			vm.$http.get(codeurl, {'email':"123"}).then(function(res) {
+			vm.$http.get(codeurl+"?email="+vm.email,null).then(function(res) {
 				if(res.data.status=='success'){
-					
+					Msg.show(res.data.msg);
 				}else{
 					 Msg.show(res.data.msg);
 				}
 			}, function(res) {
 				alert(res.status)
 			});
+		},
+		flush:function(){
+			var vm=this;
+			if(!vm.isEmail){
+				Msg.show("邮箱格式不对！");
+				vm.email='';
+			}else{
+				vm.sendMsg();
+				Msg.show("已将验证码发到你的邮箱!");
+				vm.isEmail=true;
+				vm.showTime=true;
+				vm.showFlush=false;
+				vm.time=120;
+				clearInterval(vm.date);
+				vm.date=setInterval(function(){
+				  if(vm.time>0){
+					   vm.time--;
+				   }else{
+					   vm.showFlush=true;
+				   }
+			   },1000);
+			}
 		}
 	}
 })

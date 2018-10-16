@@ -219,9 +219,6 @@ public class PostManagerController extends MyBaseController {
 	@RequestMapping(value = "personalCenter")
 	public String personalCenter(Model model) {
 		WUser user = getCurrentUser();
-		if (null != user && user.getUserType().equals(UserType.UN_REGISTER)) {
-
-		}
 		model.addAttribute("user", user);
 		return "modules/postManager/personalCenter";
 	}

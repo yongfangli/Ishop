@@ -1,0 +1,27 @@
+*{
+	color:#5d5a5a;
+    font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+}
+.container{
+	     display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    justify-content: center;
+    margin: 0 auto;
+    align-items: center;
+    padding-top:50px;
+}
+input{
+	        outline: none;
+    margin-top: 20px;
+    line-height: 27px;
+    border: 1px solid #968e8e;
+}
+input:focus{
+	 border: 1px solid #006dbb;
+}
+.submitbtn{
+	    color: #757373;
+    background: #cceef9;
+    border: none;
+}

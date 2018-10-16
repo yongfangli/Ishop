@@ -6,6 +6,7 @@
 <script src="${ctxStatic}/modules/front/js/vue.min.js" type="text/javascript"></script>
 <script src="${ctxStatic}/modules/front/js/vue-resource.js" type="text/javascript"></script>
 <script src="${ctxStatic}/modules/front/js/msg.js" type="text/javascript"></script>
+<link href="${ctxStatic}/modules/front/css/home/index.css"	type="text/css" rel="stylesheet" />
 <link	href="${ctxStatic}/modules/front/css/mssage/msg.css"	type="text/css" rel="stylesheet" />
 <link	href="${ctxStatic}/modules/front/css/mobile/postnameger/common.css"	type="text/css" rel="stylesheet" />
 <%-- <script src="${ctxStatic}/modules/front/js/vue-toast.min.js" type="text/javascript"></script>

@@ -1,16 +1,17 @@
 #alert{
-     display: flex;
+    display: flex;
+    position: absolute;
     opacity: 0;
     justify-content: center;
-    width: auto;
+    max-width: 200px;
     align-items: center;
-    color: #271505;
-    background: #cceef9;
+    color: #ffffff;
+    background: #fd0101;
     height: 30px;
     text-align: center;
     border-radius: 15px;
-    position: relative;
-    top: 50%;
+    z-index: 100;
+    top: 30%;
 }
 .show{
 animation: myfirst 1.5s;

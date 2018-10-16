@@ -3,6 +3,7 @@
 <mapper namespace="com.thinkgem.jeesite.modules.wsp.token.TokenDao">
     
 	<sql id="cln">
+	
 	</sql>
 	
 	
@@ -15,18 +16,27 @@
 			TIMESTAMPDIFF(SECOND,a.create_date,now()) &lt; a.expired and code=#{code}
 		</where>		
 	</select>
-	
+	<select id="getValidateCode" resultType="java.lang.String">
+		SELECT 
+			a.token
+		FROM w_token a
+		<where>
+			TIMESTAMPDIFF(SECOND,a.create_date,now()) &lt; a.expired and  a.session_id=#{sessionId}
+		</where>		
+	</select>
 	<insert id="insert">
 		INSERT INTO w_token(
 			token,
 			expired,
 			create_date,
-			code
+			code,
+			session_id
 		) VALUES (
 			#{token},
 			#{expired},
 			#{createDate},
-			#{code}
+			#{code},
+			#{sessionId}
 		)
 	</insert>
 	
@@ -35,13 +45,12 @@
 			token = #{token},
 			expired = #{expired},
 			createDate = #{createDate}
-			
-		WHERE code= #{code}
+		WHERE code= #{code} and session_id=#{sessionId}
 	</update>
 	
 	<update id="delete">
 		DELETE FROM w_token
-		WHERE code= #{code}
+		WHERE code= #{code} and session_id=#{sessionId}
 	</update>
 	
 </mapper>

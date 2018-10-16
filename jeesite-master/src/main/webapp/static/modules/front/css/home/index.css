@@ -1,8 +1,12 @@
 *{
+	    color: #757373;
 	    font-size: 0.9rem;
-	margin:0;
+    margin: 0 auto;
 	padding:0;
 	 font-family: 'Open Sans','Microsoft YaHei',"Heiti SC",'STHeiti Light','PMingLiU', sans-serif;
+}
+body{
+	    background-color: #f8fbc8;
 }
 .content{
 	max-width:1200px;
@@ -25,7 +29,7 @@
 .logo span{
         margin-top: -15px;
 }
-.rig{
+.i-rig{
    display: inline-flex;
     max-width: 300px;
     float: right;
@@ -38,12 +42,11 @@
 	padding: 4px;
     border: 1px solid #f1efef;
     border-radius: 5px;
-    background: #dadad2;
+    background: #cceef9;
     cursor:pointer;
     
 }
 .span-btn a{
-	color: black;
 	text-decoration:none;
 }
 .cover{
@@ -89,7 +92,7 @@ ul{
 .f-nav li{
 	margin-left:50px;
 	cursor:pointer;
-	    min-width: 40px;
+	    min-width: 30px;
 }
 .toggle-bar{
     overflow-x: scroll;
@@ -107,10 +110,13 @@ ul{
     justify-content: center;
     position: absolute;
     background: #cceef9;
-    padding: 0px 5px;
  }  
  .c-nav li{
+    padding: 0px 4px;
     margin-left:0px !important;
     min-width:30px !important;
+ }
+ li:hover{
+     background: #fad1e3;
  }
 

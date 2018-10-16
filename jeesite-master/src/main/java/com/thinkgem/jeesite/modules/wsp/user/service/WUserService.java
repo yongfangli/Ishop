@@ -55,4 +55,13 @@ public class WUserService extends CrudService<WUserDao, WUser> {
 		}
 		return null;
 	}
+	public WUser findByEmail(String email) {
+		WUser user=new WUser();
+		user.setEmail(email);
+		List<WUser> users=dao.findList(user);
+		if(users.size()>0) {
+			return users.get(0);
+		}
+		return null;
+	}
 }

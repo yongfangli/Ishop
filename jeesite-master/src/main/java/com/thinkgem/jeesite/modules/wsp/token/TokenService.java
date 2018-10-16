@@ -14,6 +14,10 @@ public class TokenService {
 		return dao.getToken(code);
 	}
 
+	public String getValidateCode(String sessionId) {
+        return dao.getValidateCode(sessionId);
+	}
+
 	@Transactional(readOnly = false)
 	public void update(WToken token) {
 		dao.update(token);
@@ -24,4 +28,5 @@ public class TokenService {
 		dao.delete(token);
 		dao.insert(token);
 	}
+
 }

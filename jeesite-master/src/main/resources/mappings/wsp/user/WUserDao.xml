@@ -15,7 +15,8 @@
 		a.create_date AS "createDate",
 		a.update_date AS "updateDate",
 		a.email AS "email",
-		a.userType AS "userType"
+		a.userType AS "userType",
+		a.password_md5 AS "passwordMd5"
 	</sql>
 	
 	<sql id="wUserJoins">
@@ -37,6 +38,9 @@
 		<where>
 			<if test="firstIp != '' and firstIp != null">
 			    a.first_ip=#{firstIp}
+			</if>
+			<if test="email != '' and email != null">
+			    a.email=#{email}
 			</if>
 		</where>
 		<choose>
@@ -81,7 +85,9 @@
 			create_date,
 			update_date,
 			email,
-			userType
+			userType,
+			password,
+			password_md5
 		) VALUES (
 			#{id},
 			#{firstIp},
@@ -95,7 +101,9 @@
 			#{createDate},
 			#{updateDate},
 			#{email},
-			#{userType}
+			#{userType},
+			#{password},
+			#{passwordMd5}
 		)
 	</insert>
 	
@@ -111,7 +119,9 @@
 			remark = #{remark},
 			update_date = #{updateDate},
 			email = #{email},
-			userType=#{userType}
+			userType=#{userType},
+			password=#{password},
+			password_md5=#{passwordMd5}
 		WHERE id = #{id}
 	</update>
 	

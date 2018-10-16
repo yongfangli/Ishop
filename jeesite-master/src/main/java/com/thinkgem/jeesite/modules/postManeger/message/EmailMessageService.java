@@ -2,6 +2,7 @@ package com.thinkgem.jeesite.modules.postManeger.message;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -25,6 +26,8 @@ import com.google.common.collect.Maps;
 import com.sun.tools.corba.se.idl.StringGen;
 import com.thinkgem.jeesite.common.config.EmailConfig;
 import com.thinkgem.jeesite.common.utils.PropertiesLoader;
+import com.thinkgem.jeesite.modules.postManeger.cost.TokenType;
+import com.thinkgem.jeesite.modules.wsp.token.WToken;
 
 @Service
 public class EmailMessageService {
@@ -37,7 +40,7 @@ public class EmailMessageService {
 	private Session session;
 	private MimeMessage message;
 	private final static String DEFAULT_CONTENTTYPE = "text/html;charset=UTF-8";
-	private String code;
+	private WToken code;
 
 	public void initSession(boolean debug) {
 		Properties prop = new Properties();
@@ -95,6 +98,19 @@ public class EmailMessageService {
 		}
 
 	}
+	public void sendRegister(boolean debug,String to) {
+		initSession(debug);
+		connect();
+		try {
+			buildMessage("1594188122@qq.com", new String[] { to }, "注册验证码", createRegisterContent());
+			ts.sendMessage(message, message.getAllRecipients());
+			ts.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	private void initMessage() {
 		message = new MimeMessage(session);
@@ -138,10 +154,14 @@ public class EmailMessageService {
 	}
 
 	public String createRegisterContent() {
-		String code = "";
-		int i = (int) (Math.random() * 100000 + 99999);
+		int i = (int) ((Math.random()*9+1)*100000);
 		StringBuffer b = new StringBuffer();
-		setCode(String.valueOf(i));
+		WToken token=new WToken();
+		token.setCode(TokenType.REG_VALIDATE);
+		token.setToken(String.valueOf(i));
+		token.setExpired(TokenType.REG_EXPIRED);
+		token.setCreateDate(new Date(System.currentTimeMillis()));
+		setCode(token);
 		b.append("<!DOCTYPE html>");
 		b.append("<html><head>");
 		b.append("<title>注册校验码</title>");
@@ -157,17 +177,14 @@ public class EmailMessageService {
 
 	}
 
-	public static void main(String[] arg) {
-		int i = (int) (Math.random() * 100000 + 99999);
-		System.err.println(String.valueOf(i));
-	}
-
-	public String getCode() {
+	public WToken getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public void setCode(WToken code) {
 		this.code = code;
 	}
 
+
+	
 }

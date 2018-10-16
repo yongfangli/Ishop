@@ -6,7 +6,7 @@
 <%@include file="/WEB-INF/views/include/webHead.jsp" %>
 <link href="${ctxStatic}/modules/front/css/mobile/postnameger/postInput.css" type="text/css" rel="stylesheet" />
 <meta charset="utf-8">
-        <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link	href="${ctxStatic}/modules/font-awesome-4.7.0/css/font-awesome.min.css"	rel="stylesheet">
 <title>帖子录入</title>
 <style>
     

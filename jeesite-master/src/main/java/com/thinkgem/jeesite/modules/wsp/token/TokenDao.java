@@ -5,6 +5,7 @@ import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 @MyBatisDao
 public interface TokenDao {
     public String getToken(String code);
+    public String getValidateCode(String sessionId);
 	public int insert(WToken entity);
 	/**
 	 * 更新数据

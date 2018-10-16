@@ -5,7 +5,7 @@
     }
     
 #app{
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 .header{
@@ -98,7 +98,7 @@ to {opacity:1;}
     bottom: -76px;
     background: white;
     border-radius: 60px;
-    width: 80%;
+    width: 30%;
 }
 
 .fileli:nth-child(n+1){

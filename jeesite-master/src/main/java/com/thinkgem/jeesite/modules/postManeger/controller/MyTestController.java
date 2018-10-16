@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.thinkgem.jeesite.common.security.Digests;
+import com.thinkgem.jeesite.common.utils.Encodes;
 import com.thinkgem.jeesite.modules.postManeger.baiduApi.service.TextService;
 import com.thinkgem.jeesite.modules.postManeger.message.EmailMessageService;
 import com.thinkgem.jeesite.modules.wsp.token.TokenService;
@@ -61,5 +64,9 @@ public class MyTestController extends MyBaseController{
 	@RequestMapping("/goTestEmail")
 	public String goEmail() {
 		return "modules/postManager/email";
+	}
+	
+	public static void main(String[] arg) throws UnsupportedEncodingException {
+		String pass=Encodes.encodeBase64(Digests.md5("kobe2008".getBytes()));
 	}
 }

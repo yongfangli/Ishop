@@ -25,6 +25,8 @@ public class WUser extends DataEntity<WUser> {
 	private String remark;		// remark
 	private String email;		// email
 	private String userType;    //userType 
+	private String passwordMd5;
+	private String password;
 	public WUser() {
 		super();
 	}
@@ -120,6 +122,22 @@ public class WUser extends DataEntity<WUser> {
 
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+
+	public String getPasswordMd5() {
+		return passwordMd5;
+	}
+
+	public void setPasswordMd5(String passwordMd5) {
+		this.passwordMd5 = passwordMd5;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 }

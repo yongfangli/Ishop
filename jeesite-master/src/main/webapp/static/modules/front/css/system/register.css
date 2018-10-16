@@ -52,3 +52,7 @@ input{
     background: #e2e0e0;
     margin-left: 10px;
 }
+.flush{
+	position: relative;
+    top: 11px;
+}

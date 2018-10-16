@@ -46,13 +46,10 @@ public abstract class TreeService<D extends TreeDao<T>, T extends TreeEntity<T>>
 		
 		// 获取修改前的parentIds，用于更新子节点的parentIds
 		String oldParentIds = entity.getParentIds(); 
-		
 		// 设置新的父节点串
 		entity.setParentIds(entity.getParent().getParentIds()+entity.getParent().getId()+",");
-		
 		// 保存或更新实体
 		super.save(entity);
-		
 		// 更新子节点 parentIds
 		T o = null;
 		try {

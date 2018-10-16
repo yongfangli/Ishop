@@ -7,9 +7,7 @@
                background-color: #f8fbc8;
         }
    #app {
-            margin:20px auto;
-            width: 800px;
-            max-width: 100%;
+            max-width: 1200px;
         }
   .vue-html5-editor {
             color: chocolate;
@@ -83,7 +81,7 @@
     position: fixed;
     right: 0;
     left: 0;
-    max-width: 800px;
+    max-width: 1200px;
     background: #cceef9;
     height: 30px;
     text-align: center;

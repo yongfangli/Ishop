@@ -6,8 +6,7 @@
 <%@include file="/WEB-INF/views/include/webHead.jsp"%>
 <meta charset="utf-8">
 <link	href="${ctxStatic}/modules/front/css/mobile/postnameger/postInput.css"	type="text/css" rel="stylesheet" />
-
-<link	href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css"	rel="stylesheet">
+<link	href="${ctxStatic}/modules/font-awesome-4.7.0/css/font-awesome.min.css"	rel="stylesheet">
 <title>帖子录入</title>
 </head>
 
@@ -15,11 +14,8 @@
     
 	<div id="app">
 	    <div id="alert" class="hid">信息提示</div>
-	    <div>
-	     <a  class="wlink" href="${ctx}/index.html" >返回首页</a>
-	    <a  class="wlink" href="${ctx}/post/personalCenter" >我的帖子</a>
-	    
-	    </div>
+	   <%@include file="/WEB-INF/views/include/header.jsp" %>
+	   <div id="editor">
 	     <div class="operate"><span  class="toggle" title='更换编辑器版本'><i class="toggle1 tog" @click='changeStyle(1)'></i><i class="toggle2 " @click='changeStyle(2)'></i></span></div>
 		<div class="editor"  contenteditable="true"></div>
 		<div class="upload">
@@ -41,6 +37,7 @@
 			</ul>
 		</div>
 		<div class="bottom" @click='commit'>发布</div>
+		</div>
 	</div>
 
 </body>
@@ -49,7 +46,7 @@
 	var patrn = /\w+(.flv|.rvmb|.mp4|.avi|.wmv)$/;
 	
 	var vm = new Vue({
-		el : '#app',
+		el : '#editor',
 		data : {
 			content : '',
 			file : '',

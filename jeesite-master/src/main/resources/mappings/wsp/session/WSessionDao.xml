@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.thinkgem.jeesite.modules.wsp.session.dao.WSessionDao">
+
+	<sql id="wSessionColumns">
+		a.id AS "id",
+		a.session_id AS "sessionId",
+		a.user_id AS
+		"user.id",
+		a.create_date AS "createDate",
+		a.expired AS "expired",
+		u3.nickName AS "user.nickName"
+	</sql>
+
+	<sql id="wSessionJoins">
+		LEFT JOIN w_user u3 ON u3.id = a.user_id
+	</sql>
+
+	<select id="get" resultType="WSession">
+		SELECT
+		<include refid="wSessionColumns" />
+		FROM w_session a
+		<include refid="wSessionJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getBySessionId" resultType="WSession">
+		SELECT
+		<include refid="wSessionColumns" />
+		FROM w_session a
+		<include refid="wSessionJoins" />
+		WHERE a.session_id= #{sessionId} and
+		TIMESTAMPDIFF(SECOND,a.create_date,now()) &lt; a.expired
+	</select>
+
+	<select id="findList" resultType="WSession">
+		SELECT
+		<include refid="wSessionColumns" />
+		FROM w_session a
+		<include refid="wSessionJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when
+				test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="WSession">
+		SELECT
+		<include refid="wSessionColumns" />
+		FROM w_session a
+		<include refid="wSessionJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when
+				test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO w_session(
+		id,
+		session_id,
+		user_id,
+		create_date,
+		expired
+		) VALUES (
+		#{id},
+		#{sessionId},
+		#{user.id},
+		#{createDate},
+		#{expired}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE w_session SET
+		session_id = #{sessionId},
+		user_id=#{user.id},
+		expired = #{expired}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM w_session
+		WHERE id = #{id}
+	</update>
+
+</mapper>
