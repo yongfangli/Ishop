@@ -90,6 +90,7 @@
 		UPDATE w_session SET
 		session_id = #{sessionId},
 		user_id=#{user.id},
+		create_date=#{createDate},
 		expired = #{expired}
 		WHERE id = #{id}
 	</update>

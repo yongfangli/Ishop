@@ -40,9 +40,12 @@ import com.thinkgem.jeesite.modules.postManeger.cost.AjaxReturn;
 import com.thinkgem.jeesite.modules.postManeger.cost.UserType;
 import com.thinkgem.jeesite.modules.wsp.file.service.WFileService;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
+import com.thinkgem.jeesite.modules.wsp.post.entity.WPostType;
 import com.thinkgem.jeesite.modules.wsp.post.service.WPostService;
 import com.thinkgem.jeesite.modules.wsp.user.entity.WUser;
 import com.thinkgem.jeesite.modules.wsp.user.service.WUserService;
+
+import groovy.json.StreamingJsonBuilder;
 
 @Controller
 @RequestMapping(value = "${webPath}/post/")
@@ -99,7 +102,7 @@ public class PostManagerController extends MyBaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "postSave")
-	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content)
+	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content,String typeId)
 			throws IOException {
 		Map<String, Object> resultMap = new HashMap<>();
 		
@@ -112,28 +115,15 @@ public class PostManagerController extends MyBaseController {
 			resultMap.put(AjaxReturn.MSG,"文本包含不法言论");
 			return resultMap;
 		}
-		String ip = getRequest().getRemoteHost();
-		// 用户处理
-		if (null == getCurrentUser()) {
-			WUser fuser = userService.findByIp(ip);
-			if (null == fuser) {
-				String user_agent = UserAgentUtils.getBrowser(getRequest()).getName();
-				String client = UserAgentUtils.getDeviceType(getRequest()).getName();
-				WUser user = new WUser();
-				user.setFirstIp(getRemortIP());
-				user.setBrowserType(user_agent);
-				user.setClient(client);
-				user.setUserType(UserType.UN_REGISTER);
-				user.setCreateDate(new Date(System.currentTimeMillis()));
-				user.setUpdateDate(new Date(System.currentTimeMillis()));
-				userService.save(user);
-				saveCurrentUser(user);
-			}else {
-				saveCurrentUser(fuser);
-			}
+		if(StringUtils.isEmpty(typeId)) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG,"请选择类型！");
+			return resultMap;
 		}
+		String ip = getRequest().getRemoteHost();
 		// save post
 		WPost post = new WPost();
+		post.setPostType(new WPostType(typeId));
 		post.setContent(content);
 		post.setUser(getCurrentUser());
 		post.setCreateDate(new Date(System.currentTimeMillis()));
@@ -147,6 +137,7 @@ public class PostManagerController extends MyBaseController {
 						multipartFile.getOriginalFilename(), multipartFile.getContentType(), null);
 				String fileId = String.valueOf(gridfile.getId());
 				fileService.save(fileId, post.getId(), multipartFile.getContentType(), multipartFile.getSize());
+				
 			}
 		}
 		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
@@ -225,11 +216,15 @@ public class PostManagerController extends MyBaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "postListJson")
-	public Map<String, Object> postListJson(@RequestParam(defaultValue = "1") Integer pageNo) {
+	public Map<String, Object> postListJson(@RequestParam(defaultValue = "1") Integer pageNo,String typeId) {
 		WUser user = getCurrentUser();
 		Map<String, Object> resultMap = new HashMap<>();
 		WPost wPost = new WPost();
 		wPost.setUser(user);
+		if(StringUtils.isNotEmpty(typeId)) {
+			wPost.setPostType(new WPostType(typeId));
+		}
+		
 		//添加排序
 	    //page.orderBy
 		
@@ -252,4 +247,9 @@ public class PostManagerController extends MyBaseController {
 	    
 		return resultMap;
 	}
+	@RequestMapping(value = "center")
+	public String postCenter() {
+		return "modules/postManager/postCenter";
+	}
+	
 }

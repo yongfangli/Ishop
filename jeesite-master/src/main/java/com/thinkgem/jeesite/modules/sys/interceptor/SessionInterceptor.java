@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.sys.interceptor;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,6 +24,8 @@ import com.thinkgem.jeesite.modules.postManeger.cost.AjaxReturn;
 import com.thinkgem.jeesite.modules.wsp.session.entity.WSession;
 import com.thinkgem.jeesite.modules.wsp.session.service.WSessionService;
 
+import oracle.jdbc.driver.DatabaseError;
+
 /**
  * 手机端视图拦截器
  * 
@@ -32,6 +36,7 @@ public class SessionInterceptor extends BaseService implements HandlerIntercepto
 	@Autowired
 	private WSessionService sessionService;
 
+	@Transactional(readOnly = false)
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -56,6 +61,10 @@ public class SessionInterceptor extends BaseService implements HandlerIntercepto
 				} else {
 					response.sendRedirect(request.getContextPath() + Global.getWebBasePath() + "/system/login");
 				}
+			} else {
+				session.setCreateDate(new Date(System.currentTimeMillis()));
+				sessionService.save(session);
+				return true;
 			}
 			return true;
 		}

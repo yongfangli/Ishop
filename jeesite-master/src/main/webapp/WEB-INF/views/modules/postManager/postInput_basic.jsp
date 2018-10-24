@@ -13,11 +13,16 @@
 <body>
     
 	<div id="app">
+	<div class="content">
 	    <div id="alert" class="hid">信息提示</div>
 	   <%@include file="/WEB-INF/views/include/header.jsp" %>
 	   <div id="editor">
-	     <div class="operate"><span  class="toggle" title='更换编辑器版本'><i class="toggle1 tog" @click='changeStyle(1)'></i><i class="toggle2 " @click='changeStyle(2)'></i></span></div>
+	     <!-- <div class="operate"><span  class="toggle" title='更换编辑器版本'><i class="toggle1 tog" @click='changeStyle(1)'></i><i class="toggle2 " @click='changeStyle(2)'></i></span></div> -->
 		<div class="editor"  contenteditable="true"></div>
+		
+		<!-- 帖子类型选择 -->
+		<div class="container"><template v-if="typeList" v-for="t in typeList"><span v-if="typeId==t.id" class="choose selected" @mouseover="choose(t.id,event)">{{t.name}}</span><span v-else class="choose" @mouseover="choose(t.id,event)">{{t.name}}</span></template></div>
+		
 		<div class="upload">
 			<embed src="${ctxStatic}/images/addfile.svg" type="image/svg+xml" />
 			<input class="file" v-model="file" type="file"
@@ -38,6 +43,7 @@
 		</div>
 		<div class="bottom" @click='commit'>发布</div>
 		</div>
+		</div>
 	</div>
 
 </body>
@@ -51,7 +57,23 @@
 			content : '',
 			file : '',
 			imgfiles : [],
-            files:[]
+            files:[],
+            typeList:[],
+            typeId:''
+		},
+		created:function(){
+			var vm=this;
+			var url='${ctx}'+'/postType/listJson';
+			vm.$http.get(url, null).then(function(res) {
+				if(res.data.status=='success'){
+					vm.typeList=res.data.data;
+					vm.typeId=vm.typeList[0].id;
+				}else{
+					 Msg.show(res.data.msg);
+				}
+			}, function(res) {
+				alert(res.status)
+			});
 		},
 		methods : {
 			changeStyle : function(val) {
@@ -61,6 +83,12 @@
 				} else if (val == 2) {
 					return;
 				}
+			},
+			choose:function(id,e){
+				var vm=this;
+				var span=$(e.target);
+				span.addClass('selected').siblings().removeClass('selected');
+				vm.typeId=id;
 			},
 			test:function(){
 				Msg.setMsg("msg");
@@ -119,6 +147,7 @@
 					}
 				}
 				formData.append('content',encode_html);
+				formData.append('typeId',vm.typeId);
 				vm.$http.post(uploadUrl, formData).then(function(res) {
 					if(res.data.status=='success'){
                         Msg.show("发布成功!");

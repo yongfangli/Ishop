@@ -1,7 +1,3 @@
-*{
-	color:#5d5a5a;
-    font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
-}
 .container{
 	     display: flex;
     flex-direction: column;
@@ -12,7 +8,8 @@
     padding-top:50px;
 }
 input{
-	        outline: none;
+	color: #a26963;
+	outline: none;
     margin-top: 20px;
     line-height: 27px;
     border: 1px solid #968e8e;

@@ -8,6 +8,8 @@
 		<result property="user.id" column="user.id" />
 		<result property="createDate" column="createDate" />
 		<result property="updateDate" column="updateDate" />
+		<result property="postType.name" column="postType.name" />
+		<result property="postType.id" column="postType.id" />
 		<collection property="files" ofType="WFile">
 			<result property="fileid" column="files.fileid" />
 			<result property="contenttype"
@@ -25,13 +27,16 @@
 		a.update_date AS "updateDate",
 		f.fileId AS "files.fileid",
 		f.contentType AS "files.contentType",
-		f.size AS "files.size"
+		f.size AS "files.size",
+		t.id AS "postType.id",
+		t.name AS "postType.name"
 	</sql>
 
 	<sql id="wPostJoins">
 		LEFT JOIN w_upload_file f ON f.targetId=a.id
 		LEFT JOIN w_user u ON u.id =
 		a.user_id
+		LEFT JOIN w_post_type t ON a.typeId=t.id
 	</sql>
 
 	<select id="get" resultMap="wpostResult">
@@ -51,6 +56,10 @@
 			<if
 				test="user != null and user.firstIp != '' and user.firstIp != null">
 				u.first_ip=#{user.firstIp}
+			</if>
+			<if
+				test="postType != null and postType.id != '' and postType.id != null">
+				a.typeId=#{postType.id}
 			</if>
 			<if test="user != null and user.id != '' and user.id != null">
 				and u.id=#{user.id}
@@ -93,14 +102,16 @@
 		file_ids,
 		user_id,
 		create_date,
-		update_date
+		update_date,
+		typeId
 		) VALUES (
 		#{id},
 		#{content},
 		#{fileIds},
 		#{user.id},
 		#{createDate},
-		#{updateDate}
+		#{updateDate},
+		#{postType.id}
 		)
 	</insert>
 
@@ -109,7 +120,8 @@
 		content = #{content},
 		file_ids = #{fileIds},
 		user_id = #{user.id},
-		update_date = #{updateDate}
+		update_date = #{updateDate},
+		typeId=#{postType.id}
 		WHERE id = #{id}
 	</update>
 

@@ -90,7 +90,7 @@ var personl=new Vue({
 			    this.getData();
 		}
 	 },
-	 getData:function(){
+	    getData:function(){
 	     	 var vm=this;
 		  if(!vm.last){
 			    vm.$http.post(url+"?pageNo="+vm.pageNo, null).then(function(res) {

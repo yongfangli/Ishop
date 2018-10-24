@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.thinkgem.jeesite.modules.postManeger.controller.PostTypeController;
 import com.thinkgem.jeesite.modules.wsp.file.entity.WFile;
 import com.thinkgem.jeesite.modules.wsp.user.entity.WUser;
 
@@ -21,6 +22,7 @@ public class WPost extends DataEntity<WPost> {
 	
 	private static final long serialVersionUID = 1L;
 	private String content;		// content
+	private WPostType postType; //帖子类型
 	private String fileIds;		// file_ids
 	private WUser user;		// belongUser
 	private String createDateStr; //datestr
@@ -73,6 +75,14 @@ public class WPost extends DataEntity<WPost> {
 
 	public void setFiles(List<WFile> files) {
 		this.files = files;
+	}
+
+	public WPostType getPostType() {
+		return postType;
+	}
+
+	public void setPostType(WPostType postType) {
+		this.postType = postType;
 	}
 
 

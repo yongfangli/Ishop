@@ -1,0 +1,36 @@
+.t-cln{
+	    flex-direction: column;
+	        display: inline-block;
+	    overflow-y: scroll;
+        max-width: 50px;
+        max-height:180px;
+}
+.t-cln li{
+	margin-top: 15px;
+}
+.vertical{
+   
+}
+.t-cln::-webkit-scrollbar {
+	display:none;
+	}
+.rigcontent{
+	       display: inline-block;
+    position: relative;
+     top: -50px;
+    left: 30px;
+    max-height: 200px;
+}
+.selected{
+	    font-size: 1.1rem;
+	   color: red;
+}
+.itemContent{
+    max-width: 200px;
+}
+.big{
+	font-size: 1.1rem;
+}
+.postList{
+	line-height: 30px;
+}

@@ -1,24 +1,16 @@
 @charset "UTF-8";
 *{
 	font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
-    margin:0 auto;
 }
   body {
                background-color: #f8fbc8;
         }
    #app {
-            max-width: 1200px;
         }
   .vue-html5-editor {
             color: chocolate;
             background-color:   #f8fbc8;
    }
-.content{
-      margin: 0 auto;
-    background: #fdfdfd;
-    height: 400px;
-    color: #040404;
-}
 。form{
 	width:400px;
 	
@@ -74,6 +66,7 @@
 	margin-top: -40px;
 }
 .bottom{
+	margin: 0 auto;
 	display: flex;
     justify-content: center;
     align-items: center;
@@ -96,3 +89,20 @@
     margin-left: 10px;
     font-size: 0.9rem;
 }
+.container{
+	    padding: 10px 0px;
+}
+.container span{
+	    background: #ffe1df;
+}
+.choose:nth-child(n+1){
+	margin-left:5px;
+}
+.choose:hover{
+	cursor:pointer;
+}
+.selected{
+	    font-size: 1.1rem;
+	   color: red;
+}
+
