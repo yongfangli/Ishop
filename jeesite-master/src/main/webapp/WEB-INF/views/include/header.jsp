@@ -20,28 +20,6 @@
 	          
 	          </template>
 	           </ul>
-	           <script>
-	           window.onload=function(){
-	           $(".f-li").mouseover(function(){
-	        	  var tag=$(this);
-	        		  tag.find("ul").removeClass("hid");
-	           })
-	            $(".f-li").mouseout(function(){
-	        	  var tag=$(this);
-	        		  tag.find("ul").addClass("hid");
-	           })
-	           $(".c-nav").mouseover(function(){
-	        	  var tag=$(this);
-	        		  tag.removeClass("hid");
-	           })
-	           $(".c-nav").mouseout(function(){
-		        	  var tag=$(this);
-		        		  tag.addClass("hid");
-		           })
-	           } 
-	          
-	           
-	           </script>
 	</div>
 	</div>
 	<script>
@@ -130,7 +108,25 @@ var header= new Vue({
 	}
 	}
    )
-
+window.onload=function(){
+    $(".f-li").mouseover(function(){
+ 	  var tag=$(this);
+ 		  tag.find("ul").removeClass("hid");
+    })
+     $(".f-li").mouseout(function(){
+ 	  var tag=$(this);
+ 		  tag.find("ul").addClass("hid");
+    })
+    $(".c-nav").mouseover(function(){
+ 	  var tag=$(this);
+ 		  tag.removeClass("hid");
+    })
+    $(".c-nav").mouseout(function(){
+     	  var tag=$(this);
+     		  tag.addClass("hid");
+        })
+    } 
+   
 
 </script>
 	

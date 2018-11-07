@@ -6,58 +6,104 @@
 <title>动画制作</title>
 <%@include file="/WEB-INF/views/include/webHead.jsp"%>
 <link	href="${ctxStatic}/modules/front/css/mobile/movies/make.css"	type="text/css" rel="stylesheet" />
+<style>
+.qianbi{
+cursor:url('${ctxStatic}/modules/canvas/qianbi.png');
+}
+</style>
 <meta charset="utf-8">
 
 </head>
 <body>
-<div class="content">
-<div class="operator">
-<div class="left">
-<p class="title">画板设置</p>
-<div class="cln"><span>宽度:</span><input v-model="width" @change="resize" class="setting-input" id="wid" type="text" oninput="value=value.replace(/[^\d]/g,'')"></div>
-<div class="cln"><span>高度:</span><input v-model="height" @change="resize" class="setting-input" id="height" type="text" oninput="value=value.replace(/[^\d]/g,'')"></div>
-<div class="cln"><span>边框颜色:</span><input id="color" type="color" v-model="borderColor" @change="changeBorderColor()"/></div>
+<div id='app'>
+<div><img src="${ctxStatic}/modules/canvas/qianbi.png" style="width: 30px;" @click="linepic"></div>
 </div>
-<div class="left">
-<p class="title">形状选择</p>
-<tabel>
-<tr><td>直线</td><td>正方形</td></tr>
-</tabel>
-</div>
-</div>
-    <canvas id="canvas">
-      您的浏览器不支持Canvas
-    </canvas>
-</div>
+<canvas id='canvas' style="background:#fff" >
+
+</canvas>
+</body>
 <script>
-var canvas=$("#canvas");
-var make=new Vue({
-	el:'.content',
+var clickX = new Array();
+var clickY = new Array();
+var clickDrag = new Array();
+var isLine=false;//是否点击了铅笔
+
+var canvas=document.getElementById("canvas");
+var ctx = canvas.getContext('2d');
+var isMouseDown=false;
+canvas.width=400;
+canvas.height=300;
+
+
+var app=new Vue({
+	el:"#app",
 	data:{
-		borderColor:'#000000',
-		width:1200,
-		height:300
-	},
-	created:function(){
-		var vm=this;
-		canvas.css("border","1px solid"+vm.borderColor);
-		canvas.width(vm.width);
-		canvas.height(vm.height);
+		color:'#fff',
 	},
 	methods:{
-		changeBorderColor:function(){
-			var vm=this;
-			$("#canvas").css("border","1px solid"+vm.borderColor);
-		},
-		resize:function(){
-			var vm=this;
-			 var canvas1 = document.getElementById('canvas');
-			  canvas1.style.width = parseInt(vm.width)+"px";
-			  canvas1.style.height = parseInt(vm.height)+"px";
+		linepic:function(){//铅笔画图
+			isLine=true;
+		$("body").css("cursor","url('${ctxStatic}/modules/canvas/qianbi.cur')-60 31,auto");
+			changeQianbi();
 		}
 	}
+});
+
+function addClick(x, y, dragging)
+{
+  clickX.push(x);
+  clickY.push(y);
+  clickDrag.push(dragging);
+}
+function redraw(){
+	  canvas.width = canvas.width; // Clears the canvas
+	  ctx.strokeStyle = "blue";
+	 // ctx.lineJoin = "round";
+	  ctx.lineWidth = 1;
+	 
+	  for(var i=0; i < clickX.length; i++)
+	  {
+		  ctx.beginPath();
+	    if(clickDrag[i] && i){//当是拖动而且i!=0时，从上一个点开始画线。
+	    	ctx.moveTo(clickX[i-1], clickY[i-1]);
+	     }else{
+	    	 ctx.moveTo(clickX[i]-1, clickY[i]);
+	     }
+	    ctx.lineTo(clickX[i], clickY[i]);
+	    ctx.closePath();
+	    ctx.stroke();
+	  }
+}
+changeQianbi=function(){
+if(isLine){
+$('#canvas').mousedown(function(e){
+	isMouseDown=true;
+	var mouseX = e.pageX - this.offsetLeft;
+	  var mouseY = e.pageY - this.offsetTop;
+	  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+	  redraw();
+});
+
+$('#canvas').mousemove(function(e){
+  if(isMouseDown){//是不是按下了鼠标
+    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+    redraw();
+  }
+});
+$('#canvas').mouseup(function(e){
+	isMouseDown = false;
+});
+$('#canvas').mouseleave(function(e){
+	isMouseDown = false;
+});
+}
+}
+$(document).keydown(function(e){
 	
-})
+    var key =  e.which;
+    if(key == 27){
+         alert('按下了ESC键');
+    }
+});
 </script>
-</body>
 </html>

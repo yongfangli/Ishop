@@ -12,4 +12,9 @@ public class MovieController extends MyBaseController {
 	public String moviesMake() {
          return "modules/movies/make";
 	}
+	
+	@RequestMapping("audioTest")
+	public String audioTest() {
+		return "modules/movies/audio";
+	}
 }
