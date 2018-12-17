@@ -33,6 +33,7 @@ import com.google.common.net.MediaType;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.Encodes;
 import com.thinkgem.jeesite.common.utils.UserAgentUtils;
 import com.thinkgem.jeesite.modules.cms.utils.RelativeDateFormat;
 import com.thinkgem.jeesite.modules.postManeger.baiduApi.service.TextService;
@@ -42,6 +43,8 @@ import com.thinkgem.jeesite.modules.wsp.file.service.WFileService;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPostType;
 import com.thinkgem.jeesite.modules.wsp.post.service.WPostService;
+import com.thinkgem.jeesite.modules.wsp.session.entity.WSession;
+import com.thinkgem.jeesite.modules.wsp.session.service.WSessionService;
 import com.thinkgem.jeesite.modules.wsp.user.entity.WUser;
 import com.thinkgem.jeesite.modules.wsp.user.service.WUserService;
 
@@ -53,7 +56,8 @@ public class PostManagerController extends MyBaseController {
 
 	@Autowired
 	private GridFsOperations gridFsTemplate;
-
+	@Autowired
+	private WSessionService sessionService;
 	@Autowired
 	private WPostService postService;
 	@Autowired
@@ -99,7 +103,38 @@ public class PostManagerController extends MyBaseController {
 				file.getContentType(), null);
 		return resultMap;
 	}
-
+	
+	@ResponseBody
+	@RequestMapping(value = "postSaveNew")
+	public Map<String, Object> postSaveNew(String content,String typeId,String title)
+			throws IOException {
+		Map<String, Object> resultMap = new HashMap<>();
+		WPost post=new WPost();
+		if (com.thinkgem.jeesite.common.utils.StringUtils.isNoneBlank(content)) {
+			content = URLDecoder.decode(content, "utf-8");
+			post.setContent(Encodes.escapeHtml(content));
+		}else {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "内容不能为空!");
+			return resultMap;
+		}
+		if (com.thinkgem.jeesite.common.utils.StringUtils.isBlank(title)) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "标题不能为空!");
+			return resultMap;
+		}
+		WSession session = sessionService.getCurrentUser(getRequest().getSession().getId());
+		post.setUser(session.getUser());
+		post.setPostType(new WPostType(typeId));
+		post.setTitle(title);
+		post.setCreateDate(new Date(System.currentTimeMillis()));
+		post.setUpdateDate(new Date(System.currentTimeMillis()));
+		postService.save(post);
+		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
+		resultMap.put(AjaxReturn.MSG, "success published!");
+		return resultMap;
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "postSave")
 	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content,String typeId)
@@ -217,20 +252,15 @@ public class PostManagerController extends MyBaseController {
 	@ResponseBody
 	@RequestMapping(value = "postListJson")
 	public Map<String, Object> postListJson(@RequestParam(defaultValue = "1") Integer pageNo,String typeId) {
-		WUser user = getCurrentUser();
 		Map<String, Object> resultMap = new HashMap<>();
 		WPost wPost = new WPost();
-		wPost.setUser(user);
 		if(StringUtils.isNotEmpty(typeId)) {
 			wPost.setPostType(new WPostType(typeId));
 		}
-		
 		//添加排序
 	    //page.orderBy
-		
 		Page<WPost> page = new Page(pageNo, 8);
 		page = postService.findPage(page, wPost);
-
 		page.getTotalPage();
 		if(pageNo>page.getLast()) {
 			resultMap.put(AjaxReturn.DATA, new ArrayList<>());
@@ -238,6 +268,7 @@ public class PostManagerController extends MyBaseController {
 		}else {
 			for (WPost o : page.getList()) {
 				o.setCreateDateStr(RelativeDateFormat.format(o.getCreateDate()));
+				o.setContent(Encodes.unescapeHtml(o.getContent()));
 			}
 			resultMap.put(AjaxReturn.DATA, page.getList());
 			resultMap.put("last",false);
@@ -251,5 +282,11 @@ public class PostManagerController extends MyBaseController {
 	public String postCenter() {
 		return "modules/postManager/postCenter";
 	}
-	
+	@RequestMapping(value = "detail/{id}")
+	public String postCenter(@PathVariable String id,Model model) {
+		WPost post=postService.get(id);
+		post.setContent(Encodes.unescapeHtml(post.getContent()));
+		model.addAttribute("post",post);
+		return "modules/postManager/detail";
+	}
 }

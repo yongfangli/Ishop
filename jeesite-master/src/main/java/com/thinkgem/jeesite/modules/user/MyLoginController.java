@@ -42,6 +42,13 @@ public class MyLoginController extends MyBaseController{
 			resultMap.put(AjaxReturn.MSG,"请输入用户名或者密码！");
 			return resultMap;
 		}
+		//当前已经有账户了，登录成功
+		WSession curruser=sessionService.getCurrentUser(getSession().getId());
+		if(null!=curruser) {
+			resultMap.put(AjaxReturn.STATUS,AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG,"登录成功!");
+			return resultMap;
+		}
 		WUser user=userService.findByEmail(username);
 		if(null!=user) {
 			String pass=Encodes.encodeBase64(Digests.md5(password.getBytes()));

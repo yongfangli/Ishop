@@ -1,10 +1,9 @@
 *{
-	color:#5d5a5a;
     font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
 }
 body{
 }
-.content{
+/* .content{
 	overflow-x: hidden;
     font-size: 0.9rem;
     border-radius: 5px;
@@ -15,7 +14,7 @@ body{
     justify-content: center;
     align-items: center;
     box-shadow: 0px 0px 5px 5px #cceef9;
-}
+} */
 .lab{
     width:100px;
     text-align: right;
@@ -26,7 +25,7 @@ body{
 }
 .cln{
     line-height: 40px;
-        width: 357px;
+      
 }
 input{
     appearance: none;
@@ -42,7 +41,7 @@ input{
     background: #cceef9;
 }
 .txtcet{
-   text-align:center;
+   margin-left: 10%;
 }
 .notice{
 	    color: red;
@@ -55,4 +54,8 @@ input{
 .flush{
 	position: relative;
     top: 11px;
+}
+#register{
+	 position: relative;
+    left: 37%;
 }

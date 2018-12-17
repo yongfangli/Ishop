@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.mypicture.dao.MypictureDao">
+    
+	<sql id="mypictureColumns">
+		a.id AS "id",
+		a.topic AS "topic",
+		a.descript AS "desc",
+		a.keyword AS "keyword",
+		a.create_date AS "createDate",
+		a.user_id AS "user.id",
+		a.update_date AS "updateDate",
+		a.imgs AS "imgs",
+		u6.name AS "user.name"
+	</sql>
+	
+	<sql id="mypictureJoins">
+		LEFT JOIN sys_user u6 ON u6.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="Mypicture">
+		SELECT 
+			<include refid="mypictureColumns"/>
+		FROM w_mypicture a
+		<include refid="mypictureJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Mypicture">
+		SELECT 
+			<include refid="mypictureColumns"/>
+		FROM w_mypicture a
+		<include refid="mypictureJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Mypicture">
+		SELECT 
+			<include refid="mypictureColumns"/>
+		FROM w_mypicture a
+		<include refid="mypictureJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_mypicture(
+			id,
+			topic,
+			descript,
+			keyword,
+			user_id,
+			create_date,
+			update_date,
+			imgs
+		) VALUES (
+			#{id},
+			#{topic},
+			#{desc},
+			#{keyword},
+			#{user.id},
+			#{createDate},
+			#{updateDate},
+			#{imgs}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_mypicture SET 	
+			topic = #{topic},
+			descript = #{desc},
+			keyword = #{keyword},
+			user_id = #{user.id},
+			update_date = #{updateDate},
+			imgs = #{imgs}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_mypicture
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

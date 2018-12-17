@@ -7,7 +7,36 @@
 <%@include file="/WEB-INF/views/include/webHead.jsp"%>
 <link	href="${ctxStatic}/modules/front/css/mobile/postnameger/postCenter.css"	type="text/css" rel="stylesheet" />
 <meta charset="utf-8">
-
+<style>
+.type{
+    font-style: italic;
+    position: absolute;
+    right: 200px;
+        color: #64d5ca;
+}
+.date{
+    position: absolute;
+    right: 100px;
+    color: #79796c;
+}
+.item{
+    line-height: 40px;
+    border-bottom: 1px dashed #ffd0a6;
+}
+.person{
+    font-style: italic;
+    position: absolute;
+    right: 300px;
+    color: #64d5ca;
+    background: #ffe1df;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+.title:hover{
+  cursor:pointer;
+  color:red;
+}
+</style>
 </head>
 <body>
 <div class="cover hid"></div>
@@ -16,106 +45,21 @@
       <%@include file="/WEB-INF/views/include/header.jsp" %>
        <div id="alert" class="hid"></div>
 	  <div class="vertical">
-	  <ul class="t-cln">
-	  <template v:if="typeList" v-for="(t,index) in typeList">
-	   <li v-if="index==0" class="selected" @mouseover="selected(t.id,event)">{{t.name}}</li>
-	  <li v-else @mouseover="selected(t.id,event)">{{t.name}}</li>
-	  </template>
-	  </ul>
-	  
-	    <div class="rigcontent">
-	  <ul class="postList">
-	  <template v-if="postList" v-for="(p, index) in postList">
-	   <li v-if="index==0" class="postItem">
-	   <span class="itemContent big">{{p.content}}</span>
-	   </li>
-	   <li v-else>
-	   <span class="itemContent">{{p.content}}</span>
-	   </li>
-	   </template>
-	  </ul>
+	  <template v-for="o in postList">
+	  <div class="item" >
+	  <p class="title"  @click="detail(o.id)">{{o.title}}</p>
+	  <div class="meta"><span class="type">{{o.postType.name}}</span><span class="person">{{o.user.nickname}}</span><span class="date">{{o.createDateStr}}</span></div>
 	  </div>
-	  
+	  </template>
 	  </div> 
 	  
 	
 	           
-	  <script>
-	  var posturl="${ctx}"+"/post/postListJson";
-   var postCenter=new Vue({
-	  el:'.vertical',
-	  data:{
-		  typeList:[],
-		  postList:[],
-		  last:false,
-		  pageNo:1,
-	  },
-	  created:function(){
-			var vm=this;
-			var url='${ctx}'+'/postType/listJson';
-			vm.$http.get(url, null).then(function(res) {
-				if(res.data.status=='success'){
-					vm.typeList=res.data.data;
-					   vm.$http.post(posturl+"?pageNo="+vm.pageNo+"&typeId="+vm.typeList[0].id, null).then(function(res) {
-							if(res.data.status=='success'){
-								var data=res.data.data;
-								vm.last=res.data.last;
-								if(data.length>0){
-									for(var i in data){
-									/* 	if(data[i].content.length>10){
-											data[i].content=data[i].content.substring(0,20)+"...";
-										} */
-									vm.postList.push(data[i]);
-									 }
-									}
-							}
-						}, function(res) {
-							Msg.show("服务器异常！");
-						});
-				}else{
-					 Msg.show(res.data.msg);
-				}
-			}, function(res) {
-				alert(res.status)
-			});
-			//获取第一个分类的列表
-			
-		}, 
-	  methods:{
-		  selected:function(id,e){
-			  var vm=this;
-			  vm.postList=[];
-			  var event=$(e.target);
-			  event.addClass("selected").siblings().removeClass("selected");
-			  this.getDataList(id);
-		  },
-		  getDataList:function(id){
-			  var vm=this;
-			  if(!vm.last){
-				    vm.$http.post(posturl+"?pageNo="+vm.pageNo+"&typeId="+id, null).then(function(res) {
-						if(res.data.status=='success'){
-							var data=res.data.data;
-							vm.last=res.data.last;
-							if(data.length>0){
-								for(var i in data){
-								/* 	if(data[i].content.length>10){
-										data[i].content=data[i].content.substring(0,20)+"...";
-									} */
-								vm.postList.push(data[i]);
-								 }
-								}
-						}
-					}, function(res) {
-						Msg.show("服务器异常！");
-					});
-				    }
-		  }
-	  }
-})
-</script>     
+	 
+	    
 	</div>
 
   </div>
 </body>
-
+ <script src="${ctxStatic}/modules/front/js/project/postCenter.js"></script>
 </html>

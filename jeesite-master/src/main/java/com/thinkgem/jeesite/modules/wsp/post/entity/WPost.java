@@ -22,6 +22,7 @@ public class WPost extends DataEntity<WPost> {
 	
 	private static final long serialVersionUID = 1L;
 	private String content;		// content
+	private String title;
 	private WPostType postType; //帖子类型
 	private String fileIds;		// file_ids
 	private WUser user;		// belongUser
@@ -43,7 +44,15 @@ public class WPost extends DataEntity<WPost> {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+	@Length(min=0, max=10000, message="title长度必须介于 0 和 100 之间")
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	@Length(min=0, max=500, message="file_ids长度必须介于 0 和 500 之间")
 	public String getFileIds() {
 		return fileIds;

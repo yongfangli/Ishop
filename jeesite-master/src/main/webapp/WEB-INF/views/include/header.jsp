@@ -8,28 +8,20 @@
 	</div>
 	<div class="toggle-bar">
 	           <ul class="f-nav">
-	           <template v-if="typeList" v-for="t in typeList">
-	           <li class="f-li">
-	           <a v-if="t.href" class="link" :href="'${ctx}'+t.href">{{t.name}}</a>
-	           <a v-else class="link" href="javascript:void(0)">{{t.name}}</a>
-	           <ul  v-if="t.child" class="c-nav hid">
-	             <template v-if="t.child" v-for="c in t.child">
-	             <li :value="c.id"><a class="link" :href="'${ctx}'+c.href">{{c.name}}</a></li>
-	             </template>
-	           </ul></li>
+	           
 	          
-	          </template>
+	          
 	           </ul>
 	</div>
 	</div>
 	<script>
-	
-var header= new Vue({
+ var ctx='${ctx}';
+ var header= new Vue({
 	el : '#header',
 	data : {
 		typeList:[]
 	},
-	created:function(){
+	beforeCreate:function(){
 		var vm=this;
 		var url='${ctx}'+'/menu/menuJson';
 		vm.$http.get(url, null).then(function(res) {
@@ -41,6 +33,7 @@ var header= new Vue({
 		}, function(res) {
 			alert(res.status)
 		});
+		
 	},
 	methods : {
 		goRegister:function(){
@@ -49,58 +42,7 @@ var header= new Vue({
 		goIndex:function(){
 			window.location.href='${pageContext.request.contextPath}';
 		},
-		showchild:function(e){
-			var tar=$(e.target);
-			if(tar[0].tagName=='li'){
-				if($(tar.find("ul")).hasClass("hid")){
-					tar.find("ul").removeClass("hid");
-					}else{
-						tar.find("ul").addClass("hid");
-					}
-			}else{
-				if($(tar.siblings("ul")).hasClass("hid")){
-					tar.siblings("ul").removeClass("hid");
-					}else{
-						tar.siblings("ul").addClass("hid");
-					}
-			}
-		},
-		fadway:function(e){
-			var tar=$(e.target);
-			if(tar[0].tagName=='li'){
-				if($(tar.find("ul")).hasClass("hid")){
-				tar.find("ul").removeClass("hid");
-				}else{
-					tar.find("ul").addClass("hid");
-				}
-			}else{
-				if($(tar.siblings("ul")).hasClass("hid")){
-					tar.siblings("ul").removeClass("hid");
-					}else{
-						tar.siblings("ul").addClass("hid");
-					}
-			}
-		},
-		show:function(e){
-			var tar=$(e.target);
-			var parent=tar.parent("ul");
-			if($(parent).hasClass("hid")){
-				$(parent).removeClass("hid");	
-			}else{
-				$(parent).addClass("hid");	
-			}
-			parent.removeClass("hid");
-			
-		},
-		fadwaythis:function(e){
-			var tar=$(e.target);
-			var parent=tar.parent("ul");
-			if($(parent).hasClass("hid")){
-				$(parent).removeClass("hid");	
-			}else{
-				$(parent).addClass("hid");	
-			}
-		},
+		
 		goLogin:function(){
 			window.location.href='${ctx}/system/login';
 		}
@@ -108,26 +50,68 @@ var header= new Vue({
 	}
 	}
    )
-window.onload=function(){
-    $(".f-li").mouseover(function(){
- 	  var tag=$(this);
- 		  tag.find("ul").removeClass("hid");
-    })
-     $(".f-li").mouseout(function(){
- 	  var tag=$(this);
- 		  tag.find("ul").addClass("hid");
-    })
-    $(".c-nav").mouseover(function(){
- 	  var tag=$(this);
- 		  tag.removeClass("hid");
-    })
-    $(".c-nav").mouseout(function(){
-     	  var tag=$(this);
-     		  tag.addClass("hid");
-        })
-    } 
+
    
 
 </script>
+<script>
+	          window.onload=function(){
+	        	  //加载菜单
+	        	 var url='${ctx}'+'/menu/menuJson';
+	        	 $.ajax({
+	        		url:url,
+	        		method:'post',
+	        		success:function(data){
+	        			if(data.status=='success'){
+	        				var tag=$(".f-nav");
+	        				var html="";
+	        				for(var i=0;i< data.data.length;i++){
+	        					var item=data.data[i];
+	        					var ctx='${ctx}';
+	        					html+="<li class='f-li'>";
+	        					if(item.href==''){
+	        						html=html+"<a class='link' href='javascript:void(0)'>"+item.name+"</a>";
+	        					}else{
+	        						html=html+ "<a  class='link' href='"+ctx+item.href+"'>"+item.name+"</a>";
+	        					}
+	        					if(item.child){
+	        						var ul="<ul   class='c-nav hid'>";
+	        						for(var j=0;j< item.child.length;j++){
+	        							var c=item.child[j];
+	        							ul=ul+"<li value='"+c.id+"'><a class='link' href='"+ctx+c.href+"'>"+c.name+"</a></li>";
+	        						}
+	        						ul=ul+"</ul>";
+	        						html+=ul;
+	        					}
+	        					html+="</li>";
+	        				}
+	        				tag.empty().html(html);
+	        				//
+	        				   $(".f-li").mouseover(function(){
+	  		 	  var tag=$(this);
+	  		 		  tag.find("ul").removeClass("hid");
+	  		    })
+	  		     $(".f-li").mouseout(function(){
+	  		 	  var tag=$(this);
+	  		 		  tag.find("ul").addClass("hid");
+	  		    })
+	  		    $(".c-nav").mouseover(function(){
+	  		 	  var tag=$(this);
+	  		 		  tag.removeClass("hid");
+	  		    })
+	  		    $(".c-nav").mouseout(function(){
+	  		     	  var tag=$(this);
+	  		     		  tag.addClass("hid");
+	  		        })
+	        			}else{
+	        				 Msg.show(res.data.msg);
+	        			}
+	        		} 
+	        	 })
+	        	  
+	  		 
+	  		    } 
+	          
+	          </script>
 	
 		

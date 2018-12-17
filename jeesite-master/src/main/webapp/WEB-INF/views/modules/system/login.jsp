@@ -14,7 +14,6 @@
 <body>
 
 <div class="content" id="app">
-    
     <%@include file="/WEB-INF/views/include/header.jsp" %>
      <div id="alert" class="hid"></div>
     <div class="container">
