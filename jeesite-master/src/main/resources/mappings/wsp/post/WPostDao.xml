@@ -69,6 +69,17 @@
 			<if test="user != null and user.id != '' and user.id != null">
 				and u.id=#{user.id}
 			</if>
+			<if test="searchContent != null and searchContent != '' ">
+				and (a.content like
+				<if test="dbName == 'oracle'">'%'||#{searchContent}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchContent}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchContent},'%')</if>
+				or a.title like
+				<if test="dbName == 'oracle'">'%'||#{searchContent}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{searchContent}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{searchContent},'%')</if>
+				)
+			</if>
 		</where>
 		<choose>
 			<when

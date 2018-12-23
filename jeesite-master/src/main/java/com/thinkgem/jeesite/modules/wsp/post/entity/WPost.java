@@ -28,6 +28,7 @@ public class WPost extends DataEntity<WPost> {
 	private WUser user;		// belongUser
 	private String createDateStr; //datestr
 	private List<WFile> files;
+	private String searchContent;
 	public WPost() {
 		super();
 	}
@@ -94,6 +95,11 @@ public class WPost extends DataEntity<WPost> {
 		this.postType = postType;
 	}
 
+	public String getSearchContent() {
+		return searchContent;
+	}
 
-	
+	public void setSearchContent(String searchContent) {
+		this.searchContent = searchContent;
+	}
 }

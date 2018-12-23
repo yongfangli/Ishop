@@ -30,3 +30,13 @@
 	    border-top-right-radius: 12px;
         border-bottom-right-radius: 12px;
 }
+.back{
+	background: #ffe1df;
+    padding: 10px 10px;
+    background-image: url(../../../image/back.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.portrait{
+	    margin-left: 10px;
+}

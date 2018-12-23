@@ -25,6 +25,9 @@ import com.thinkgem.jeesite.modules.sys.entity.Office;
 import com.thinkgem.jeesite.modules.sys.entity.Role;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.security.SystemAuthorizingRealm.Principal;
+import com.thinkgem.jeesite.modules.wsp.session.dao.WSessionDao;
+import com.thinkgem.jeesite.modules.wsp.session.entity.WSession;
+import com.thinkgem.jeesite.modules.wsp.user.entity.WUser;
 
 /**
  * 用户工具类
@@ -37,6 +40,7 @@ public class UserUtils {
 	private static RoleDao roleDao = SpringContextHolder.getBean(RoleDao.class);
 	private static MenuDao menuDao = SpringContextHolder.getBean(MenuDao.class);
 	private static AreaDao areaDao = SpringContextHolder.getBean(AreaDao.class);
+	private static WSessionDao sessionDao = SpringContextHolder.getBean(WSessionDao.class);
 	private static OfficeDao officeDao = SpringContextHolder.getBean(OfficeDao.class);
 
 	public static final String USER_CACHE = "userCache";
@@ -131,7 +135,15 @@ public class UserUtils {
 		// 如果没有登录，则返回实例化空的User对象。
 		return new User();
 	}
-
+	public static WUser getWUser(String requestId){
+		WSession user=sessionDao.getBySessionId(requestId);
+		if(null!=user&&null!=user.getUser()) {
+			return user.getUser();
+		}
+		return null;
+	}
+	
+	
 	/**
 	 * 获取当前用户角色列表
 	 * @return

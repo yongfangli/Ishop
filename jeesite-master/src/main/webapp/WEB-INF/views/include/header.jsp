@@ -4,15 +4,29 @@
 <div class="header">
 	 <div class="logo"><img @click="goIndex" src="${ctxStatic}/modules/front/image/logo.png" alt="logo"/></div>
 	 <div class="desc">动漫&漫画交流，制作网站</div>
-	 <div class="i-rig"><span class="span-btn"><a href="${pageContext.request.contextPath}">首页</a></span><span class="span-btn"><a href="${ctx}/post/postInput?style=basic">发帖</a></span><span class="span-btn"><a href="#" @click="goLogin">登录</a></span><span @click="goRegister" class="span-btn">注册</span></div>
+	 <div class="i-rig">
+	 <span class="span-btn"><a href="${pageContext.request.contextPath}">首页</a></span>
+	 <span class="span-btn"><a href="${ctx}/post/postInput?style=basic">发帖</a></span>
+	 <span @click="goRegister" class="span-btn">注册</span>
+	 <c:if test="${fns:getWUser(pageContext.session.id)==null}"><span class="span-btn"><a href="#" @click="goLogin">登录</a></span></c:if>
+	 <c:if test="${fns:getWUser(pageContext.session.id)!=null}">
+	 <c:if test="${fns:getWUser(pageContext.session.id).portrait!=''&&fns:getWUser(pageContext.session.id).portrait!=null}">
+	 <a href="${ctx}/personal"><img class="portrait" src="${ctx}/post/file/${fns:getWUser(pageContext.session.id).portrait}"/></a>
+	 </c:if>
+	  <c:if test="${fns:getWUser(pageContext.session.id).portrait==''||fns:getWUser(pageContext.session.id).portrait==null}">
+	 <a href="${ctx}/personal"><img class="portrait" src="${ctxStatic}/images/default_protail.png"/></a>
+	 </c:if>
+	 </span>
+	 </c:if>
+	 </div>
 	</div>
 	<div class="toggle-bar">
 	           <ul class="f-nav">
 	           
 	          
-	          
 	           </ul>
 	</div>
+	<div style="line-height: 40px;"><a class='back' href="javascript:history.back(-1)"></a></div>
 	</div>
 	<script>
  var ctx='${ctx}';

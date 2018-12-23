@@ -66,6 +66,7 @@ var login=new Vue({
 		}).then(function(res) {
 				if(res.data.status=='success'){
 					 Msg.show(res.data.msg);
+					 window.location.href='${ctx}'+'/';
 				}else{
 					 Msg.show(res.data.msg);
 				}

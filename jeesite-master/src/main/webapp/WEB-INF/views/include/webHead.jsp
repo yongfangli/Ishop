@@ -11,4 +11,4 @@
 <link	href="${ctxStatic}/modules/front/css/mobile/postnameger/common.css"	type="text/css" rel="stylesheet" />
 <%-- <script src="${ctxStatic}/modules/front/js/vue-toast.min.js" type="text/javascript"></script>
 <link	href="${ctxStatic}/modules/front/css/vue-toast.min.css"	type="text/css" rel="stylesheet" /> --%>
-<script type="text/javascript">var ctx ='${ctx}', ctxStatic='${ctxStatic}';</script>
+<script type="text/javascript">var ctx ='${ctx}', ctxStatic='${ctxStatic}';Vue.http.options.emulateJSON = true;</script>

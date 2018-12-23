@@ -15,11 +15,11 @@
 <div class="content" id="app">
  <%@include file="/WEB-INF/views/include/header.jsp" %>
     <div id="alert" class="hid"></div>
-    <form id="register">
+    <form id="register" autocomplete="off">
     <div class="cln"><div class="lab">手机号：</div><div class="rig"><input v-model="phone" type="text" class="ipt" @change="checkPhone(event)"/><span class="notice">&nbsp*</span></div></div>
     <div class="cln"><div class="lab">邮箱：</div><div class="rig"><input  v-model="email" type="text"  class="ipt"  @change="checkEmail(event)"/><span class="notice">&nbsp*</span></div></div>
-    <div class="cln"><div class="lab">昵称：</div><div class="rig"><input  v-model="nickname" type="text" class="ipt" @change="checkNickname(event)"/><span class="notice">&nbsp*</span></div></div>
-    <div class="cln"><div class="lab">密码：</div><div class="rig"><input  v-model="password" type="password" class="ipt" @change="checkPassword(event)"/><span style="text-align: center;" class="notice">&nbsp*(至少6位字母或者数字)</span></div></div>
+    <div class="cln"><div class="lab">昵称：</div><div class="rig"><input autocomplete="off" v-model="nickname" type="text"  class="ipt" @change="checkNickname(event)"/><span class="notice">&nbsp*</span></div></div>
+    <div class="cln"><div class="lab">密码：</div><div class="rig"><input  autocomplete="new-password" v-model="password" type="password"  class="ipt" @change="checkPassword(event)"/><span style="text-align: center;" class="notice">&nbsp*(至少6位字母或者数字)</span></div></div>
     <div class="cln"><div class="lab">重复密码：</div><div class="rig"><input  v-model="repassword" type="password" class="ipt" @change="checkRepassword(event)"/><span class="notice"></span></div></div>
     <div class="cln"><div class="lab">检验码：</div><div class="rig"><input  v-model="code" type="text" class="ipt code" @change="checkCode(event)"/><span v-show="showTime" class="time">{{time}}</span><img v-show="showFlush" class="flush" @click="flush" src="${ctxStatic}/images/flush.png"/><span class="notice">&nbsp*</span></div></div>
     <div class="cln txtcet"><input class="submt" type="button" @click="submit" value="提交"/></div>

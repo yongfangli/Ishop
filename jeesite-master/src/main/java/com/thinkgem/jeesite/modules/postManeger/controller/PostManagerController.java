@@ -74,7 +74,7 @@ public class PostManagerController extends MyBaseController {
 
 	@RequestMapping(value = "postInput")
 	public String goPostInput(Model model, String style) {
-		
+
 		if (StringUtils.isNotEmpty(style) && STYLE_LIST.contains(style)) {
 			return "modules/postManager/postInput_" + style;
 		} else {
@@ -87,33 +87,32 @@ public class PostManagerController extends MyBaseController {
 	@RequestMapping(value = "uploadFile")
 	public Map<String, Object> uploadFile(MultipartFile file) throws IOException {
 		Map<String, Object> resultMap = new HashMap<>();
-		//只能上传视频和图片
-		if(file.getContentType().contains("image")||file.getContentType().contains("video")) {
+		// 只能上传视频和图片
+		if (file.getContentType().contains("image") || file.getContentType().contains("video")) {
 			GridFSFile gridfile = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(),
 					file.getContentType(), null);
 			String fileId = String.valueOf(gridfile.getId());
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
 			resultMap.put(AjaxReturn.DATA, fileId);
-		}else {
+		} else {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "文件格式不对");
 		}
-		
+
 		GridFSFile gridfile = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(),
 				file.getContentType(), null);
 		return resultMap;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "postSaveNew")
-	public Map<String, Object> postSaveNew(String content,String typeId,String title)
-			throws IOException {
+	public Map<String, Object> postSaveNew(String content, String typeId, String title) throws IOException {
 		Map<String, Object> resultMap = new HashMap<>();
-		WPost post=new WPost();
+		WPost post = new WPost();
 		if (com.thinkgem.jeesite.common.utils.StringUtils.isNoneBlank(content)) {
 			content = URLDecoder.decode(content, "utf-8");
 			post.setContent(Encodes.escapeHtml(content));
-		}else {
+		} else {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "内容不能为空!");
 			return resultMap;
@@ -134,25 +133,25 @@ public class PostManagerController extends MyBaseController {
 		resultMap.put(AjaxReturn.MSG, "success published!");
 		return resultMap;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "postSave")
-	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content,String typeId)
+	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content, String typeId)
 			throws IOException {
 		Map<String, Object> resultMap = new HashMap<>();
-		
+
 		if (com.thinkgem.jeesite.common.utils.StringUtils.isNoneBlank(content)) {
 			content = URLDecoder.decode(content, "utf-8");
 		}
-		//测试文本是否包含一些不法言论
-		if(StringUtils.isNotEmpty(content)&&!textService.validateText(content)) {
+		// 测试文本是否包含一些不法言论
+		if (StringUtils.isNotEmpty(content) && !textService.validateText(content)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
-			resultMap.put(AjaxReturn.MSG,"文本包含不法言论");
+			resultMap.put(AjaxReturn.MSG, "文本包含不法言论");
 			return resultMap;
 		}
-		if(StringUtils.isEmpty(typeId)) {
+		if (StringUtils.isEmpty(typeId)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
-			resultMap.put(AjaxReturn.MSG,"请选择类型！");
+			resultMap.put(AjaxReturn.MSG, "请选择类型！");
 			return resultMap;
 		}
 		String ip = getRequest().getRemoteHost();
@@ -163,16 +162,16 @@ public class PostManagerController extends MyBaseController {
 		post.setUser(getCurrentUser());
 		post.setCreateDate(new Date(System.currentTimeMillis()));
 		post.setUpdateDate(new Date(System.currentTimeMillis()));
-		if(StringUtils.isNotBlank(post.getContent())||(null != files && files.length > 0)) {
+		if (StringUtils.isNotBlank(post.getContent()) || (null != files && files.length > 0)) {
 			postService.save(post);
 		}
-		if (null != files && files.length > 0&&StringUtils.isNoneBlank(post.getId())) {
+		if (null != files && files.length > 0 && StringUtils.isNoneBlank(post.getId())) {
 			for (MultipartFile multipartFile : files) {
 				GridFSFile gridfile = gridFsTemplate.store(multipartFile.getInputStream(),
 						multipartFile.getOriginalFilename(), multipartFile.getContentType(), null);
 				String fileId = String.valueOf(gridfile.getId());
 				fileService.save(fileId, post.getId(), multipartFile.getContentType(), multipartFile.getSize());
-				
+
 			}
 		}
 		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
@@ -249,44 +248,63 @@ public class PostManagerController extends MyBaseController {
 		return "modules/postManager/personalCenter";
 	}
 
+	/**
+	 * 
+	 * @param pageNo 
+	 * @param typeId
+	 * @param scont searchContent
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "postListJson")
-	public Map<String, Object> postListJson(@RequestParam(defaultValue = "1") Integer pageNo,String typeId) {
+	public Map<String, Object> postListJson(@RequestParam(defaultValue = "1") Integer pageNo, String typeId,
+			String scont) {
 		Map<String, Object> resultMap = new HashMap<>();
 		WPost wPost = new WPost();
-		if(StringUtils.isNotEmpty(typeId)) {
+		if (StringUtils.isNotEmpty(typeId)) {
 			wPost.setPostType(new WPostType(typeId));
 		}
-		//添加排序
-	    //page.orderBy
+		if (StringUtils.isNotEmpty(scont)) {
+			wPost.setSearchContent(scont);
+		}
+		// 添加排序
+		// page.orderBy
 		Page<WPost> page = new Page(pageNo, 8);
 		page = postService.findPage(page, wPost);
-		page.getTotalPage();
-		if(pageNo>page.getLast()) {
-			resultMap.put(AjaxReturn.DATA, new ArrayList<>());
-			resultMap.put("last",true);
-		}else {
+		resultMap.put("total", page.getTotalPage());
+		if (pageNo >= page.getLast()) {
+			if (page.getList().size() > 0) {
+				for (WPost o : page.getList()) {
+					o.setCreateDateStr(RelativeDateFormat.format(o.getCreateDate()));
+					o.setContent(Encodes.unescapeHtml(o.getContent()));
+				}
+				resultMap.put(AjaxReturn.DATA, page.getList());
+			} else {
+				resultMap.put(AjaxReturn.DATA, new ArrayList<>());
+			}
+			resultMap.put("last", true);
+		} else {
 			for (WPost o : page.getList()) {
 				o.setCreateDateStr(RelativeDateFormat.format(o.getCreateDate()));
 				o.setContent(Encodes.unescapeHtml(o.getContent()));
 			}
 			resultMap.put(AjaxReturn.DATA, page.getList());
-			resultMap.put("last",false);
+			resultMap.put("last", false);
 		}
-		
 		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
-	    
 		return resultMap;
 	}
+
 	@RequestMapping(value = "center")
 	public String postCenter() {
 		return "modules/postManager/postCenter";
 	}
+
 	@RequestMapping(value = "detail/{id}")
-	public String postCenter(@PathVariable String id,Model model) {
-		WPost post=postService.get(id);
+	public String postCenter(@PathVariable String id, Model model) {
+		WPost post = postService.get(id);
 		post.setContent(Encodes.unescapeHtml(post.getContent()));
-		model.addAttribute("post",post);
+		model.addAttribute("post", post);
 		return "modules/postManager/detail";
 	}
 }
