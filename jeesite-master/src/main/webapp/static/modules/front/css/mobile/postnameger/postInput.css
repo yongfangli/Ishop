@@ -16,8 +16,9 @@
 	
 }
 .editor{
+	margin-top: 10px;
 	font-size: 1.2rem;
-	   min-height: 200px;
+	min-height: 200px;
     background: #fdfdfd;
     outline: none;
     border: 1px solid #ddd;
@@ -27,13 +28,12 @@
 
 .clkb{
 	border-radius: 10px;
-	 padding: 5px;
+	padding: 5px;
     background: #cceef9;
     outline: none;
     color: #271505;
     border: none;
     border-radius: 12px;
-
 }
 .buttong{
 	    text-align: right;
@@ -107,4 +107,10 @@
 	    font-size: 1.1rem;
 	   color: red;
 }
-
+#topic{
+    -webkit-appearance: none;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid;
+    background: #f8fbc8;
+}

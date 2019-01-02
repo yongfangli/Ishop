@@ -3,9 +3,14 @@
  */
 package com.thinkgem.jeesite.modules.wsp.user.entity;
 
+import java.util.Date;
+import java.util.List;
+
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.thinkgem.jeesite.common.persistence.DataEntity;
+import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
 
 /**
  * 网站用户Entity
@@ -27,6 +32,12 @@ public class WUser extends DataEntity<WUser> {
 	private String userType;    //userType 
 	private String passwordMd5;
 	private String password;
+	private Date birthday;
+	private String constellation;//星座
+	private Integer followerNum;//粉丝
+	private Integer noticeNum;//关注
+	private Integer postNum;//发的帖子
+	private Integer collectionNum;//收藏
 	public WUser() {
 		super();
 	}
@@ -138,6 +149,54 @@ public class WUser extends DataEntity<WUser> {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getConstellation() {
+		return constellation;
+	}
+
+	public void setConstellation(String constellation) {
+		this.constellation = constellation;
+	}
+
+	public Integer getFollowerNum() {
+		return followerNum;
+	}
+
+	public void setFollowerNum(Integer followerNum) {
+		this.followerNum = followerNum;
+	}
+
+	public Integer getNoticeNum() {
+		return noticeNum;
+	}
+
+	public void setNoticeNum(Integer noticeNum) {
+		this.noticeNum = noticeNum;
+	}
+
+	public Integer getPostNum() {
+		return postNum;
+	}
+
+	public void setPostNum(Integer postNum) {
+		this.postNum = postNum;
+	}
+
+	public Integer getCollectionNum() {
+		return collectionNum;
+	}
+
+	public void setCollectionNum(Integer collectionNum) {
+		this.collectionNum = collectionNum;
 	}
 	
 }

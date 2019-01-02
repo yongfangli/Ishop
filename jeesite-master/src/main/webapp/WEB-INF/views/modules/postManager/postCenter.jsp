@@ -20,7 +20,7 @@
     color: #79796c;
 }
 .item{
-    line-height: 40px;
+    line-height: 30px;
     border-bottom: 1px dashed #ffd0a6;
 }
 .person{
@@ -38,8 +38,7 @@
 }
 
 .submit{
-    width: 25px;
-    height: 25px;
+    width: 30px;
     background: url('${ctxStatic}/modules/front/image/search_btn.png') top no-repeat;
     text-indent: -9999px;
     border: none;
@@ -47,7 +46,7 @@
     margin-top: 5px;
 }
 .search{
-	    width: 200px;
+	width: 100px;
     font-size: 13px;
     line-height: 26px;
     height: 26px;
@@ -58,48 +57,75 @@
 }
 input{ outline: medium;}
 .searchform{
+    width:150px;
 	float: right;
-    margin-top: -30px;
+    margin-top: -45px;
     padding: 4px 10px;
     border: #cccccc 1px solid;
-    width: 232px;
     height: 28px;
     line-height: 24px;
     border-radius: 3px;
     margin-right: 26px;
 }
-.pageUl{
-    display: flex;
-        margin: 0px 10px;
+
+.sch{
+  animation: myfirst 1s;
+  animation-iteration-count:1;
+  animation-fill-mode:forwards;
 }
-.page{
-    margin-top: 60px;
-   display: inline-flex;
-    float: right;
-    justify-content: space-evenly;
-    align-items: center;
-    border: 1px solid #e4dcdc;
- }
-.btn{
-    border: palegoldenrod;
-    background: #b19ebe;
-    color: white;
-    cursor:pointer;
-    padding: 5px 2px;
+.schi{
+  animation: myfirst1 1s;
+  animation-iteration-count:1;
+  animation-fill-mode:forwards;
 }
-.pageItem{
-     padding: 4px 8px;
-}
-.cur{
-    background: #b19ebe;
-}
-.pre{
-      margin-left: 10px;
-}
-.end{
-    margin-left: 10px;
+.meta{
+  height: 48px;
 }
 
+
+@keyframes myfirst
+{
+from  {width:150px;}
+to  { border: 1px solid;
+      width:250px ;
+   }
+}
+
+@keyframes myfirst1
+{
+from  {width:100px;}
+to  { 
+    width: 206px;
+   }
+}
+.searchcont{
+    border: 1px solid #decbcb;
+    padding: 5px;
+    background: white;
+    margin-top: 25px;
+}
+.stitle span{
+ margin-left:10px;
+}
+.all{
+    background: #0cd4c2;
+    color: white;
+    padding: 2px;
+}
+.metainfo{
+    margin-left:10px;
+}
+em{
+    color: #249470;
+    font-style: normal;
+}
+.stitle{
+    line-height: 40px;
+}
+.stress{
+    background: #b5180d;
+    color: white;
+}
 </style>
 </head>
 <body>
@@ -114,10 +140,16 @@ input{ outline: medium;}
     </div>
        <div id="alert" class="hid"></div>
 	  <div class="vertical">
+	  
+	  <div class="searchcont">
+	  <div class="stitle"><label>类型:</label><span class="all">全部</span><span></span></div>
+	  <div class="stitle"><label>其它:</label><span class="all">全部</span><span value="1">收藏量</span><span value="2">评论量</span><span value="3">赞量</span></div>
+	  </div>
+	  
 	  <template v-for="o in postList">
 	  <div class="item" >
 	  <p class="title"  @click="detail(o.id)">{{o.title}}</p>
-	  <div class="meta"><span class="type">{{o.postType.name}}</span><span class="person">{{o.user.nickname}}</span><span class="date">{{o.createDateStr}}</span></div>
+	  <div class="meta"><span class="metainfo">赞<em>{{o.praiseNum}}</em></span><span class="metainfo">收藏量<em>{{o.collectionNum}}</em></span><span class="metainfo">评论量<em>{{o.comments}}</em></span><span class="type">{{o.postType.name}}</span><span class="person">{{o.user.nickname}}</span><span class="date">{{o.createDateStr}}</span></div>
 	  </div>
 	  </template>
 	  
@@ -141,6 +173,7 @@ input{ outline: medium;}
 	</div>
 </div>
   </div>
+  <input type="hidden" value="${userId}" id="userId"/> 
 </body>
  <script src="${ctxStatic}/modules/front/js/project/postCenter.js"></script>
 </html>

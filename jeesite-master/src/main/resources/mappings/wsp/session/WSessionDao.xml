@@ -10,7 +10,12 @@
 		"user.id",
 		a.create_date AS "createDate",
 		a.expired AS "expired",
-		u3.nickName AS "user.nickName"
+		u3.nickName AS "user.nickName",
+		u3.phone AS "user.phone",
+		u3.email AS "user.email",
+		u3.portrait AS "user.portrait",
+		u3.birthday AS "user.birthday",
+		u3.constellation AS "user.constellation"
 	</sql>
 
 	<sql id="wSessionJoins">

@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinkgem.jeesite.modules.wsp.user.dao.WUserDao">
-    
+<!--     	<resultMap id="wUserMap" type="WUser">
+		<id property="id" column="id" />
+		<result property="nickname" column="nickname" />
+		<result property="username" column="username" />
+		<result property="phone" column="phone" />
+		<result property="portrait" column="portrait" />
+		<result property="email" column="email" />
+		<result property="birthday" column="birthday" />
+		<result property="constellation" column="constellation" />
+		<collection property="follower" ofType="WUser">
+			<result property="f.id" column="follower.id" />
+			<result property="f.name" column="follower.name" />
+		</collection>
+	</resultMap> -->
 	<sql id="wUserColumns">
 		a.id AS "id",
 		a.first_ip AS "firstIp",
@@ -16,7 +29,13 @@
 		a.update_date AS "updateDate",
 		a.email AS "email",
 		a.userType AS "userType",
-		a.password_md5 AS "passwordMd5"
+		a.password_md5 AS "passwordMd5",
+		a.birthday AS "birthday",
+		a.constellation AS "constellation",
+	    IFNULL((select count(1)  from w_follow a1  where a1.follow_user_id=a.id),0) as "followerNum",
+	    IFNULL((select count(1)  from w_post_collection a2  where a2.userId=a.id),0) as "collectionNum",
+		IFNULL((select count(1)  from w_post a3  where a3.user_Id=a.id),0) as "postNum",
+		IFNULL((select count(1)  from w_follow a4  where a4.user_id=a.id),0) as "noticeNum"
 	</sql>
 	
 	<sql id="wUserJoins">
@@ -36,11 +55,8 @@
 		FROM w_user a
 		<include refid="wUserJoins"/>
 		<where>
-			<if test="firstIp != '' and firstIp != null">
-			    a.first_ip=#{firstIp}
-			</if>
 			<if test="email != '' and email != null">
-			    a.email=#{email}
+			   and a.email=#{email}
 			</if>
 		</where>
 		<choose>
@@ -87,7 +103,9 @@
 			email,
 			userType,
 			password,
-			password_md5
+			password_md5,
+			birthday,
+			constellation
 		) VALUES (
 			#{id},
 			#{firstIp},
@@ -103,7 +121,9 @@
 			#{email},
 			#{userType},
 			#{password},
-			#{passwordMd5}
+			#{passwordMd5},
+			#{birthday},
+			#{constellation}
 		)
 	</insert>
 	
@@ -121,7 +141,9 @@
 			email = #{email},
 			userType=#{userType},
 			password=#{password},
-			password_md5=#{passwordMd5}
+			password_md5=#{passwordMd5},
+			birthday=#{birthday},
+	        constellation=#{constellation}			
 		WHERE id = #{id}
 	</update>
 	

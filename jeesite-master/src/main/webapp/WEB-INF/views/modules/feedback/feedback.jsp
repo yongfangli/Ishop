@@ -3,20 +3,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>个人中心</title>
+<title>问题反馈</title>
 <%@include file="/WEB-INF/views/include/webHead.jsp"%>
-<link	href="${ctxStatic}/modules/front/css/mobile/personal/personal.css"	type="text/css" rel="stylesheet" />
+<link	href="${ctxStatic}/modules/front/css/help/help.css"	type="text/css" rel="stylesheet" />
 <meta charset="utf-8">
 <style>
 </style>
 </head>
 <body>
+<div class="cover hid"></div>
     <div id="app">
 	<div class="content">
       <%@include file="/WEB-INF/views/include/header.jsp" %>
        <div id="alert" class="hid"></div>
+	  <div class="fcontent">
+	       
+	  </div>
+	    
 	</div>
 
   </div>
 </body>
+<script src="${ctxStatic}/modules/front/js/project/feedback/feedback.js"></script>
 </html>

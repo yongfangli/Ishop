@@ -107,7 +107,6 @@ var register=new Vue({
 				$(e.target).focus();
 			}else{
 				//发送验证码
-				  
 				vm.sendMsg();
 				Msg.show("已将验证码发到你的邮箱!");
 				vm.isEmail=true;

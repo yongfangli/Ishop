@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.thinkgem.jeesite.modules.wsp.praise.dao.WPostPraiseDao">
+
+	<sql id="wPostPraiseColumns">
+		a.postid AS "post.id",
+		a.userid AS "user.id",
+		a.type AS  "type"
+	</sql>
+
+	<sql id="wPostPraiseJoins">
+	</sql>
+
+	<select id="get" resultType="WPostPraise">
+		SELECT
+		<include refid="wPostPraiseColumns" />
+		FROM w_post_praise a
+		<include refid="wPostPraiseJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="WPostPraise">
+		SELECT
+		<include refid="wPostPraiseColumns" />
+		FROM w_post_praise a
+		<include refid="wPostPraiseJoins" />
+		<where>
+			<if test="user != null and user.id != '' and user.id != null">
+				a.userId=#{user.id}
+			</if>
+			<if test=" type != '' and type != null">
+				and a.type=#{type}
+			</if>
+			<if test="post!=null and post.id != '' and post.id != null">
+				and a.postId=#{post.id}
+			</if>
+		</where>
+		<choose>
+			<when
+				test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="WPostPraise">
+		SELECT
+		<include refid="wPostPraiseColumns" />
+		FROM w_post_praise a
+		<include refid="wPostPraiseJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when
+				test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO w_post_praise(
+		postid,
+		userid,
+		type
+		) VALUES (
+		#{post.id},
+		#{user.id},
+		#{type}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE w_post_praise SET
+		postid = #{post.id},
+		userid = #{user.id},
+		type = #{type}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM w_post_praise
+		WHERE id = #{id}
+	</update>
+
+</mapper>

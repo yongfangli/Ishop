@@ -42,7 +42,7 @@ public class SessionInterceptor extends BaseService implements HandlerIntercepto
 			throws Exception {
 		String url = request.getRequestURI();
 		if (url.indexOf("login") > 0 || url.indexOf("menuJson") > 0 || url.indexOf("goRegister") > 0
-				|| url.indexOf("tryLogin") > 0 || url.indexOf("isLogin") > 0) {
+				|| url.indexOf("tryLogin") > 0 || url.indexOf("isLogin") > 0 || url.indexOf("help") > 0) {
 			return true;
 		} else {
 			Map<String, Object> resultMap = new HashMap<>();

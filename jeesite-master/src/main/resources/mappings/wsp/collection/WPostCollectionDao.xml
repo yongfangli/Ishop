@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.collection.dao.WPostCollectionDao">
+    
+	<sql id="wPostCollectionColumns">
+		a.id AS "id",
+		a.postid AS "post.id",
+		a.userid AS "user.id",
+		a.create_date AS "createDate"
+	</sql>
+	
+	<sql id="wPostCollectionJoins">
+	</sql>
+    
+	<select id="get" resultType="WPostCollection">
+		SELECT 
+			<include refid="wPostCollectionColumns"/>
+		FROM w_post_collection a
+		<include refid="wPostCollectionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WPostCollection">
+		SELECT 
+			<include refid="wPostCollectionColumns"/>
+		FROM w_post_collection a
+		<include refid="wPostCollectionJoins"/>
+		<where>
+			<if	test="post != null and post.id != '' and post.id != null">
+				a.postid=#{post.id}
+			</if>
+			<if	test="user != null and user.id != '' and user.id != null">
+				and a.userid=#{user.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WPostCollection">
+		SELECT 
+			<include refid="wPostCollectionColumns"/>
+		FROM w_post_collection a
+		<include refid="wPostCollectionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_post_collection(
+			id,
+			postid,
+			userid,
+			create_date
+		) VALUES (
+			#{id},
+			#{post.id},
+			#{user.id},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_post_collection SET 	
+			postid = #{post.id},
+			userid = #{user.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_post_collection
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -13,6 +13,10 @@
 		<result property="updateDate" column="updateDate" />
 		<result property="postType.name" column="postType.name" />
 		<result property="postType.id" column="postType.id" />
+		<result property="praiseNum" column="praiseNum" />
+		<result property="stepNum" column="stepNum" />
+		<result property="commentsNum" column="commentsNum" />
+		<result property="collectionNum" column="collectionNum" />
 		<collection property="files" ofType="WFile">
 			<result property="fileid" column="files.fileid" />
 			<result property="contenttype"
@@ -34,7 +38,11 @@
 		t.id AS "postType.id",
 		t.name AS "postType.name",
 		u.userName AS "user.username",
-		u.nickName AS "user.nickname"
+		u.nickName AS "user.nickname",
+		ifNull((select count(*) from w_post_praise b where b.postId=a.id and b.type="0"),0) AS "praiseNum",
+		ifNull((select count(*) from w_post_praise b where b.postId=a.id and b.type="1"),0) AS "stepNum",
+		ifNull((select count(*) from w_comments b where b.postId=a.id),0) AS "commentsNum",
+		ifNull((select count(*) from w_post_collection b where b.postId=a.id),0) AS "collectionNum"
 	</sql>
 
 	<sql id="wPostJoins">
@@ -64,7 +72,7 @@
 			</if>
 			<if
 				test="postType != null and postType.id != '' and postType.id != null">
-				a.typeId=#{postType.id}
+				and a.typeId=#{postType.id}
 			</if>
 			<if test="user != null and user.id != '' and user.id != null">
 				and u.id=#{user.id}

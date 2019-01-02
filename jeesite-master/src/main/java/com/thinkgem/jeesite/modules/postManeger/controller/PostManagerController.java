@@ -10,12 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.internet.ContentType;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.h2.util.New;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsCriteria;
@@ -29,26 +27,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.common.net.MediaType;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.Encodes;
-import com.thinkgem.jeesite.common.utils.UserAgentUtils;
 import com.thinkgem.jeesite.modules.cms.utils.RelativeDateFormat;
 import com.thinkgem.jeesite.modules.postManeger.baiduApi.service.TextService;
 import com.thinkgem.jeesite.modules.postManeger.cost.AjaxReturn;
-import com.thinkgem.jeesite.modules.postManeger.cost.UserType;
+import com.thinkgem.jeesite.modules.postManeger.cost.AllConst;
+import com.thinkgem.jeesite.modules.wsp.collection.entity.WPostCollection;
+import com.thinkgem.jeesite.modules.wsp.collection.service.WPostCollectionService;
+import com.thinkgem.jeesite.modules.wsp.comments.entity.WComments;
+import com.thinkgem.jeesite.modules.wsp.comments.service.WCommentsService;
 import com.thinkgem.jeesite.modules.wsp.file.service.WFileService;
+import com.thinkgem.jeesite.modules.wsp.follow.entity.WFollow;
+import com.thinkgem.jeesite.modules.wsp.follow.service.WFollowService;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPostType;
 import com.thinkgem.jeesite.modules.wsp.post.service.WPostService;
+import com.thinkgem.jeesite.modules.wsp.praise.entity.WPostPraise;
+import com.thinkgem.jeesite.modules.wsp.praise.service.WPostPraiseService;
 import com.thinkgem.jeesite.modules.wsp.session.entity.WSession;
 import com.thinkgem.jeesite.modules.wsp.session.service.WSessionService;
 import com.thinkgem.jeesite.modules.wsp.user.entity.WUser;
 import com.thinkgem.jeesite.modules.wsp.user.service.WUserService;
-
-import groovy.json.StreamingJsonBuilder;
 
 @Controller
 @RequestMapping(value = "${webPath}/post/")
@@ -66,7 +68,14 @@ public class PostManagerController extends MyBaseController {
 	private WUserService userService;
 	@Autowired
 	private WFileService fileService;
-
+	@Autowired
+	private WPostPraiseService praiseService;
+	@Autowired
+	private WFollowService followService;
+	@Autowired
+	private WCommentsService commentsService;
+	@Autowired
+	private WPostCollectionService collectionService;
 	public static final List STYLE_LIST = new ArrayList();
 	static {
 		STYLE_LIST.add("basic");
@@ -76,6 +85,7 @@ public class PostManagerController extends MyBaseController {
 	public String goPostInput(Model model, String style) {
 
 		if (StringUtils.isNotEmpty(style) && STYLE_LIST.contains(style)) {
+			model.addAttribute("style", style);
 			return "modules/postManager/postInput_" + style;
 		} else {
 			return "modules/postManager/postInput";
@@ -136,13 +146,21 @@ public class PostManagerController extends MyBaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "postSave")
-	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content, String typeId)
+	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content, String typeId,String topic)
 			throws IOException {
 		Map<String, Object> resultMap = new HashMap<>();
-
+		WPost post = new WPost();
 		if (com.thinkgem.jeesite.common.utils.StringUtils.isNoneBlank(content)) {
 			content = URLDecoder.decode(content, "utf-8");
+			post.setContent(Encodes.escapeHtml(content));
 		}
+		
+		if (com.thinkgem.jeesite.common.utils.StringUtils.isBlank(topic)) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "标题不能为空!");
+			return resultMap;
+		}
+		
 		// 测试文本是否包含一些不法言论
 		if (StringUtils.isNotEmpty(content) && !textService.validateText(content)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
@@ -156,10 +174,11 @@ public class PostManagerController extends MyBaseController {
 		}
 		String ip = getRequest().getRemoteHost();
 		// save post
-		WPost post = new WPost();
+	
 		post.setPostType(new WPostType(typeId));
-		post.setContent(content);
-		post.setUser(getCurrentUser());
+		WSession session = sessionService.getCurrentUser(getCurrentUserId());
+		post.setUser(session.getUser());
+		post.setTitle(topic);
 		post.setCreateDate(new Date(System.currentTimeMillis()));
 		post.setUpdateDate(new Date(System.currentTimeMillis()));
 		if (StringUtils.isNotBlank(post.getContent()) || (null != files && files.length > 0)) {
@@ -244,6 +263,7 @@ public class PostManagerController extends MyBaseController {
 	@RequestMapping(value = "personalCenter")
 	public String personalCenter(Model model) {
 		WUser user = getCurrentUser();
+		user=userService.get(user.getId());
 		model.addAttribute("user", user);
 		return "modules/postManager/personalCenter";
 	}
@@ -258,11 +278,14 @@ public class PostManagerController extends MyBaseController {
 	@ResponseBody
 	@RequestMapping(value = "postListJson")
 	public Map<String, Object> postListJson(@RequestParam(defaultValue = "1") Integer pageNo, String typeId,
-			String scont) {
+			String scont,String userId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		WPost wPost = new WPost();
 		if (StringUtils.isNotEmpty(typeId)) {
 			wPost.setPostType(new WPostType(typeId));
+		}
+		if (StringUtils.isNotEmpty(userId)) {
+			wPost.setUser(new WUser(userId));
 		}
 		if (StringUtils.isNotEmpty(scont)) {
 			wPost.setSearchContent(scont);
@@ -296,15 +319,161 @@ public class PostManagerController extends MyBaseController {
 	}
 
 	@RequestMapping(value = "center")
-	public String postCenter() {
+	public String postCenter(String userId,Model model) {
+		model.addAttribute("userId", userId);
 		return "modules/postManager/postCenter";
 	}
 
 	@RequestMapping(value = "detail/{id}")
-	public String postCenter(@PathVariable String id, Model model) {
+	public String detail(@PathVariable String id, Model model) {
 		WPost post = postService.get(id);
 		post.setContent(Encodes.unescapeHtml(post.getContent()));
+		post.setCreateDateStr(RelativeDateFormat.format(post.getCreateDate()));
 		model.addAttribute("post", post);
 		return "modules/postManager/detail";
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "comments")
+	public Map<String, Object> comments(String comments,String postId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		if (StringUtils.isBlank(comments)||StringUtils.isBlank(postId)) {
+			resultMap.put(AjaxReturn.MSG, "服务器异常啦！");
+			return resultMap;
+		}
+		WComments comments2=new WComments();
+		comments2.setUser(sessionService.getCurrentUser(getCurrentUserId()).getUser());
+		comments2.setComments(comments);
+		comments2.setPost(new WPost(postId));
+		commentsService.save(comments2);
+		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
+		return resultMap;
+	}
+	/**
+	 * 赞
+	 * @param postId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "praise")
+	public Map<String, Object> praise(String postId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		if(StringUtils.isEmpty(postId)){
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "服务器异常啦!");
+			return resultMap;
+		}
+		WSession session = sessionService.getCurrentUser(getCurrentUserId());
+		WPostPraise postPraise=new WPostPraise();
+		postPraise.setUser(session.getUser());
+		postPraise.setType(AllConst.PRAISE);
+		postPraise.setPost(new WPost(postId));
+		List<WPostPraise> postPraises=praiseService.findList(postPraise);
+		if(postPraises.size()>0) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "你已经赞过了啦!");
+			return resultMap;
+		}
+		praiseService.save(postPraise);
+		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
+		return resultMap;
+	}
+	/**
+	 * 踩
+	 * @param postId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "step")
+	public Map<String, Object> step(String postId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		if(StringUtils.isEmpty(postId)){
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "服务器异常啦!");
+			return resultMap;
+		}
+		WSession session = sessionService.getCurrentUser(getCurrentUserId());
+		WPostPraise postPraise=new WPostPraise();
+		postPraise.setUser(session.getUser());
+		postPraise.setType(AllConst.STEP);
+		postPraise.setPost(new WPost(postId));
+		List<WPostPraise> postPraises=praiseService.findList(postPraise);
+		if(postPraises.size()>0) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "你已经踩过了啦!");
+			return resultMap;
+		}
+		praiseService.save(postPraise);
+		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
+		return resultMap;
+	}
+	
+	/**
+	 * 关注
+	 * @param userId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "follow")
+	public Map<String, Object> follow(String userId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		if(StringUtils.isEmpty(userId)){
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "服务器异常啦!");
+			return resultMap;
+		}
+		WSession session = sessionService.getCurrentUser(getCurrentUserId());
+		if(session.getUser().getId().equals(userId)) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "本人不需要关注啦!");
+			return resultMap;
+		}
+		WFollow follow=new WFollow();
+		follow.setFollowUser(new WUser(userId));
+		follow.setUser(session.getUser());
+		List<WFollow> follows=followService.findList(follow);
+		if(follows.size()>0) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "你已经关注了啦!");
+			return resultMap;
+		}
+		followService.save(follow);
+		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
+		return resultMap;
+	}
+	
+	/**
+	 * 收藏
+	 * @param userId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "collect")
+	public Map<String, Object> collect(String postId,String userId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		if(StringUtils.isEmpty(postId)||StringUtils.isEmpty(userId)){
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "服务器异常啦!");
+			return resultMap;
+		}
+		WSession session = sessionService.getCurrentUser(getCurrentUserId());
+		if(session.getUser().getId().equals(userId)) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "本人不需要收藏啦!");
+			return resultMap;
+		}
+		WPostCollection collection=new WPostCollection();
+		collection.setPost(new WPost(postId));
+		collection.setUser(session.getUser());
+		List<WPostCollection> collections=collectionService.findList(collection);
+		if(collections.size()>0) {
+			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+			resultMap.put(AjaxReturn.MSG, "你已经收藏了该帖子!");
+			return resultMap;
+		}
+		collectionService.save(collection);
+		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
+		return resultMap;
 	}
 }

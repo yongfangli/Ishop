@@ -1,5 +1,6 @@
 //src:http://localhost:81/jeesite/src/main/webapp/modules/front/js/project/postCenter.js
 var posturl=ctx+"/post/postListJson";
+var userId=$("#userId").val();
    var postCenter=new Vue({
 	  el:'#postCenter',
 	  data:{
@@ -19,7 +20,7 @@ var posturl=ctx+"/post/postListJson";
 			//获取第一个分类的列表
 			  var vm=this;
 			  vm.$http.post(posturl, 
-					  {}).then(function(res) {
+					  {'userId':userId}).then(function(res) {
 								if(res.data.status=='success'){
 									var data=res.data;
 									vm.last=data.last;
@@ -43,7 +44,7 @@ var posturl=ctx+"/post/postListJson";
 				  vm.pageNo=1; 
 			  }
 			  vm.$http.post(posturl, 
-					  {'pageNo':vm.pageNo,'scont':vm.scontent}).then(function(res) {
+					  {'pageNo':vm.pageNo,'scont':vm.scontent,'userId':userId}).then(function(res) {
 								if(res.data.status=='success'){
 									var data=res.data;
 									vm.last=data.last;
@@ -124,3 +125,16 @@ var posturl=ctx+"/post/postListJson";
 			    }
 		   　　　　}
 		   　　});
+   
+   
+   $(function(){
+	   $(".searchform").mouseover(function(){
+		   $(".searchform").addClass("sch");
+			$(".search").addClass("schi");
+	   });
+       $(".searchform").mouseout(function(){
+    	   $(".searchform").removeClass("sch");
+			$(".search").removeClass("schi");
+	   })
+   })
+

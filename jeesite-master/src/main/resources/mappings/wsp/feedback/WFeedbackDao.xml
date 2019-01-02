@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.feedback.dao.WFeedbackDao">
+    
+	<sql id="wFeedbackColumns">
+		a.id AS "id",
+		a.content AS "content",
+		a.userid AS "user.id",
+		a.create_date AS "createDate",
+		a.suggest AS "suggest",
+		a.suggest_user AS "suggestUser.id",
+		a.reply_date AS "replyDate",
+		a.is_read AS "isRead"
+	</sql>
+	
+	<sql id="wFeedbackJoins">
+	</sql>
+    
+	<select id="get" resultType="WFeedback">
+		SELECT 
+			<include refid="wFeedbackColumns"/>
+		FROM w_feedback a
+		<include refid="wFeedbackJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WFeedback">
+		SELECT 
+			<include refid="wFeedbackColumns"/>
+		FROM w_feedback a
+		<include refid="wFeedbackJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WFeedback">
+		SELECT 
+			<include refid="wFeedbackColumns"/>
+		FROM w_feedback a
+		<include refid="wFeedbackJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_feedback(
+			id,
+			content,
+			userid,
+			create_date,
+			suggest,
+			suggest_user,
+			reply_date,
+			is_read
+		) VALUES (
+			#{id},
+			#{content},
+			#{user.id},
+			#{createDate},
+			#{suggest},
+			#{suggestUser.id},
+			#{replyDate},
+			#{isRead}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_feedback SET 	
+			content = #{content},
+			userid = #{user.id},
+			suggest = #{suggest},
+			suggest_user = #{suggestUser.id},
+			reply_date = #{replyDate},
+			is_read = #{isRead}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_feedback
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

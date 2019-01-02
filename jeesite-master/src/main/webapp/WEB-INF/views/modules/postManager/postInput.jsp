@@ -1,28 +1,62 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-  <%@ include file="/WEB-INF/views/include/webtaglib.jsp"%> 
+<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ include file="/WEB-INF/views/include/webtaglib.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
-<%@include file="/WEB-INF/views/include/webHead.jsp" %>
-<link href="${ctxStatic}/modules/front/css/mobile/postnameger/postInput.css" type="text/css" rel="stylesheet" />
+<%@include file="/WEB-INF/views/include/webHead.jsp"%>
 <meta charset="utf-8">
-  <link	href="${ctxStatic}/modules/font-awesome-4.7.0/css/font-awesome.min.css"	rel="stylesheet">
+<link	href="${ctxStatic}/modules/front/css/mobile/postnameger/postInput.css"	type="text/css" rel="stylesheet" />
+<link	href="${ctxStatic}/modules/font-awesome-4.7.0/css/font-awesome.min.css"	rel="stylesheet">
 <title>帖子录入</title>
 <style>
-    
+.cln{
+  margin: 10px;
+}
 
-
-      
 </style>
 </head>
+
 <body>
+    
+	<div id="app">
+	<div class="content">
+	    <div id="alert" class="hid">信息提示</div>
+	   <%@include file="/WEB-INF/views/include/header.jsp" %>
+	   <div id="editor">
+	   <div class="operate"><span  class="toggle" title='更换编辑器版本'>
+	   <c:choose>
+	   <c:when test="${style!=null}">
+	   <i class="toggle1  tog" @click='changeStyle(1)'></i><i class="toggle2" @click='changeStyle(2)'></i></span>
+	   </c:when>
+	   <c:otherwise>
+	   <i class="toggle1" @click='changeStyle(1)'></i><i class="toggle2 tog" @click='changeStyle(2)'></i></span>
+	   </c:otherwise>
+	   </c:choose>
+	   </div>
+	   <div class="cln"><label>主题:</label><input type="text" id="topic" ></div>
+		<vue-html5-editor :content="content" @change="updateData" :height="300"></vue-html5-editor>
+		<!-- 帖子类型选择 -->
+		<div class="container"><template v-if="typeList" v-for="t in typeList"><span v-if="typeId==t.id" class="choose selected" @mouseover="choose(t.id,event)">{{t.name}}</span><span v-else class="choose" @mouseover="choose(t.id,event)">{{t.name}}</span></template></div>
+		
+		<div class="imgs">
+			<ul class="imglist">
+				<template v-if="imgfiles" v-for="option in imgfiles">
 
-<div class="" id="app">
- <div class="operate"><span  class="toggle" title='更换编辑器版本'><i class="toggle1" @click='changeStyle(1)'></i><i class="toggle2  tog" @click='changeStyle(2)'></i></span></div>
-<vue-html5-editor :content="content" :height="300"></vue-html5-editor>
-<div class="bottom" @click="">发布</div>
-</div>
+				<li v-if="option.type=='pic'" class='img-item'><img
+					v-bind:src="option.src" /></li>
+				<li v-else class='img-item'><video class="video"
+						controls="controls">
+						<source v-bind:src="option.src">
+					</video></li>
+				</template>
+			</ul>
+		</div>
+		<div class="bottom" @click='commit'>发布</div>
+		</div>
+		</div>
+	</div>
 
+</body>
 <script>
 Vue.use(VueHtml5Editor,{ // 全局组件名称，使用new VueHtml5Editor(options)时该选项无效 
     // global component name
@@ -157,24 +191,74 @@ Vue.use(VueHtml5Editor,{ // 全局组件名称，使用new VueHtml5Editor(option
     // extended modules
     modules: {
         //omit,reference to source code of build-in modules
-    }}),
-new Vue({
-    el: "#app",
-    data: {
-        content: "",
-    },
-    methods:{
-    	 changeStyle:function(val){
-         	var vm=this;
-         	if(val==1){
-         		return;
-         	}else if(val==2){
-         		window.location.href = "${ctx}"	+ "/post/postInput?style=basic";
-         	}
-         }
-    }
-})
+    }});
 
+
+	var reg = /^\S*\.(?:png|jpe?g|bmp|gif)$/;
+	var patrn = /\w+(.flv|.rvmb|.mp4|.avi|.wmv)$/;
+	var content="";
+	var vm = new Vue({
+		el : '#editor',
+		data : {
+			content : '',
+			file : '',
+			imgfiles : [],
+            files:[],
+            typeList:[],
+            typeId:''
+		},
+		created:function(){
+			var vm=this;
+			var url='${ctx}'+'/postType/listJson';
+			vm.$http.get(url, null).then(function(res) {
+				if(res.data.status=='success'){
+					vm.typeList=res.data.data;
+					vm.typeId=vm.typeList[0].id;
+				}else{
+					 Msg.show(res.data.msg);
+				}
+			}, function(res) {
+				alert(res.status)
+			});
+		},
+		methods : {
+			commit : function(){
+				 var vm=this;
+				 var topic=$("#topic").val();
+				 if(topic==''){
+					 Msg.show("请输入标题"); 
+				 }
+				var url=ctx+'/post/postSaveNew';
+				vm.$http.post(url, {'content':encodeURIComponent(content),'typeId':vm.typeId,'title':topic},{emulateJSON: true}).then(function(res) {
+					if(res.data.status=='success'){
+						 Msg.show("上传成功!");
+					}else{
+						 Msg.show(res.data.msg);
+					}
+				}, function(res) {
+					Msg.show(res.status)
+				});
+		      },
+		     choose:function(id,e){
+					var vm=this;
+					var span=$(e.target);
+					span.addClass('selected').siblings().removeClass('selected');
+					vm.typeId=id;
+				},
+		      updateData:function(e) {
+		    	  var vm=this;
+		    	  content=e/* encodeURIComponent(e) */;
+		        },
+		       changeStyle:function(v){
+		         	var vm=this;
+		         	if(v==1){
+		         		window.location.href = "${ctx}"	+ "/post/postInput";
+		         	}else if(v==2){
+		         		window.location.href = "${ctx}"	+ "/post/postInput?style=basic";
+		         	}
+		         }
+				
+		}
+	})
 </script>
-</body>
 </html>

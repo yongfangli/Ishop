@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.follow.dao.WFollowDao">
+    
+	<sql id="wFollowColumns">
+		a.follow_user_id AS "followUser.id",
+		a.user_id AS "user.id",
+		a.create_date AS "createDate",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="wFollowJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="WFollow">
+		SELECT 
+			<include refid="wFollowColumns"/>
+		FROM w_follow a
+		<include refid="wFollowJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WFollow">
+		SELECT 
+			<include refid="wFollowColumns"/>
+		FROM w_follow a
+		<include refid="wFollowJoins"/>
+		<where>
+			<if	test="followUser != null and followUser.id != '' and followUser.id != null">
+				a.follow_user_id=#{followUser.id}
+			</if>
+			<if	test="user != null and user.id != '' and user.id != null">
+				and a.user_id=#{user.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WFollow">
+		SELECT 
+			<include refid="wFollowColumns"/>
+		FROM w_follow a
+		<include refid="wFollowJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_follow(
+			follow_user_id,
+			user_id,
+			create_date
+		) VALUES (
+			#{followUser.id},
+			#{user.id},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_follow SET 	
+			follow_user_id = #{followUser.id},
+			user_id = #{user.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_follow
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

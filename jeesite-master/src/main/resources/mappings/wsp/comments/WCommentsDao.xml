@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.comments.dao.WCommentsDao">
+    
+	<sql id="wCommentsColumns">
+		a.id AS "id",
+		a.userid AS "user.id",
+		a.comments AS "comments",
+		a.postid AS "post.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		u.portrait AS "user.portrait",
+		u.nickName AS "user.nickname"
+	</sql>
+	
+	<sql id="wCommentsJoins">
+	left join w_user u on u.id=a.userid 
+	</sql>
+    
+	<select id="get" resultType="WComments">
+		SELECT 
+			<include refid="wCommentsColumns"/>
+		FROM w_comments a
+		<include refid="wCommentsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WComments">
+		SELECT 
+			<include refid="wCommentsColumns"/>
+		FROM w_comments a
+		<include refid="wCommentsJoins"/>
+		<where>
+			<if	test="post != null and post.id != '' and post.id != null">
+				a.postId=#{post.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WComments">
+		SELECT 
+			<include refid="wCommentsColumns"/>
+		FROM w_comments a
+		<include refid="wCommentsJoins"/>
+		<where>
+			<if	test="post != null and post.id != '' and post.id != null">
+				a.postId=#{post.id}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_comments(
+			id,
+			userid,
+			comments,
+			postid,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{comments},
+			#{post.id},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_comments SET 	
+			userid = #{user.id},
+			comments = #{comments},
+			postid = #{post.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_comments
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

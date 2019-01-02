@@ -39,8 +39,8 @@ public class MyBaseController {
 	    public WUser getCurrentUser() {
 	    	return (WUser) getRequest().getSession().getAttribute(WEB_USER);
 	    }
-	    public void saveCurrentUser(WUser user) {
-	    	getSession().setAttribute(WEB_USER, user);
+	    public String getCurrentUserId() {
+	         return	getSession().getId();
 	    }
 	    public String getRemortIP() {
 	    	  if (getRequest().getHeader("x-forwarded-for") == null) {

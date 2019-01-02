@@ -27,8 +27,12 @@ public class WPost extends DataEntity<WPost> {
 	private String fileIds;		// file_ids
 	private WUser user;		// belongUser
 	private String createDateStr; //datestr
+	private Integer praiseNum;//赞的数量
+	private Integer stepNum; //踩的数量
 	private List<WFile> files;
 	private String searchContent;
+	private Integer collectionNum;//收藏量
+	private Integer commentsNum;//评论数量
 	public WPost() {
 		super();
 	}
@@ -102,4 +106,37 @@ public class WPost extends DataEntity<WPost> {
 	public void setSearchContent(String searchContent) {
 		this.searchContent = searchContent;
 	}
+
+	public Integer getPraiseNum() {
+		return praiseNum;
+	}
+
+	public void setPraiseNum(Integer praiseNum) {
+		this.praiseNum = praiseNum;
+	}
+
+	public Integer getStepNum() {
+		return stepNum;
+	}
+
+	public void setStepNum(Integer stepNum) {
+		this.stepNum = stepNum;
+	}
+
+	public Integer getCollectionNum() {
+		return collectionNum;
+	}
+
+	public void setCollectionNum(Integer collectionNum) {
+		this.collectionNum = collectionNum;
+	}
+
+	public Integer getCommentsNum() {
+		return commentsNum;
+	}
+
+	public void setCommentsNum(Integer commentsNum) {
+		this.commentsNum = commentsNum;
+	}
+	
 }
