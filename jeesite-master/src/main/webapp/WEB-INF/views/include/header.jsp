@@ -3,7 +3,7 @@
 <div id="header">	
 <div class="header">
 	 <div class="logo"><img @click="goIndex" src="${ctxStatic}/modules/front/image/logo.png" alt="logo"/></div>
-	 <div class="desc">动漫&漫画交流，制作网站</div>
+	 <div class="desc">小说,动漫&漫画交流，制作网站</div>
 	 <div class="i-rig">
 	 <span class="span-btn"><a href="${pageContext.request.contextPath}">首页</a></span>
 	 <span class="span-btn"><a href="${ctx}/post/postInput?style=basic">发帖</a></span>

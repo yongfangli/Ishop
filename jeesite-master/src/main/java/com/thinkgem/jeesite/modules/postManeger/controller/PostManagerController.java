@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +36,7 @@ import com.thinkgem.jeesite.modules.cms.utils.RelativeDateFormat;
 import com.thinkgem.jeesite.modules.postManeger.baiduApi.service.TextService;
 import com.thinkgem.jeesite.modules.postManeger.cost.AjaxReturn;
 import com.thinkgem.jeesite.modules.postManeger.cost.AllConst;
+import com.thinkgem.jeesite.modules.postManeger.vo.PostSearchVo;
 import com.thinkgem.jeesite.modules.wsp.collection.entity.WPostCollection;
 import com.thinkgem.jeesite.modules.wsp.collection.service.WPostCollectionService;
 import com.thinkgem.jeesite.modules.wsp.comments.entity.WComments;
@@ -45,6 +47,7 @@ import com.thinkgem.jeesite.modules.wsp.follow.service.WFollowService;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPostType;
 import com.thinkgem.jeesite.modules.wsp.post.service.WPostService;
+import com.thinkgem.jeesite.modules.wsp.post.service.WPostTypeService;
 import com.thinkgem.jeesite.modules.wsp.praise.entity.WPostPraise;
 import com.thinkgem.jeesite.modules.wsp.praise.service.WPostPraiseService;
 import com.thinkgem.jeesite.modules.wsp.session.entity.WSession;
@@ -74,6 +77,8 @@ public class PostManagerController extends MyBaseController {
 	private WFollowService followService;
 	@Autowired
 	private WCommentsService commentsService;
+	@Autowired
+	private WPostTypeService postTypeService;
 	@Autowired
 	private WPostCollectionService collectionService;
 	public static final List STYLE_LIST = new ArrayList();
@@ -146,21 +151,21 @@ public class PostManagerController extends MyBaseController {
 
 	@ResponseBody
 	@RequestMapping(value = "postSave")
-	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content, String typeId,String topic)
-			throws IOException {
+	public Map<String, Object> postInput(@RequestParam("files") MultipartFile[] files, String content, String typeId,
+			String topic) throws IOException {
 		Map<String, Object> resultMap = new HashMap<>();
 		WPost post = new WPost();
 		if (com.thinkgem.jeesite.common.utils.StringUtils.isNoneBlank(content)) {
 			content = URLDecoder.decode(content, "utf-8");
 			post.setContent(Encodes.escapeHtml(content));
 		}
-		
+
 		if (com.thinkgem.jeesite.common.utils.StringUtils.isBlank(topic)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "标题不能为空!");
 			return resultMap;
 		}
-		
+
 		// 测试文本是否包含一些不法言论
 		if (StringUtils.isNotEmpty(content) && !textService.validateText(content)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
@@ -174,7 +179,7 @@ public class PostManagerController extends MyBaseController {
 		}
 		String ip = getRequest().getRemoteHost();
 		// save post
-	
+
 		post.setPostType(new WPostType(typeId));
 		WSession session = sessionService.getCurrentUser(getCurrentUserId());
 		post.setUser(session.getUser());
@@ -263,39 +268,45 @@ public class PostManagerController extends MyBaseController {
 	@RequestMapping(value = "personalCenter")
 	public String personalCenter(Model model) {
 		WUser user = getCurrentUser();
-		user=userService.get(user.getId());
+		user = userService.get(user.getId());
 		model.addAttribute("user", user);
 		return "modules/postManager/personalCenter";
 	}
 
 	/**
 	 * 
-	 * @param pageNo 
+	 * @param pageNo
 	 * @param typeId
-	 * @param scont searchContent
+	 * @param scont  searchContent
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "postListJson")
-	public Map<String, Object> postListJson(@RequestParam(defaultValue = "1") Integer pageNo, String typeId,
-			String scont,String userId) {
+	public Map<String, Object> postListJson(@RequestBody PostSearchVo vo) {
 		Map<String, Object> resultMap = new HashMap<>();
 		WPost wPost = new WPost();
-		if (StringUtils.isNotEmpty(typeId)) {
-			wPost.setPostType(new WPostType(typeId));
+		if (StringUtils.isNotEmpty(vo.getTypeId())) {
+			wPost.setPostType(new WPostType(vo.getTypeId()));
 		}
-		if (StringUtils.isNotEmpty(userId)) {
-			wPost.setUser(new WUser(userId));
+		if (StringUtils.isNotEmpty(vo.getUserId())) {
+			wPost.setUser(new WUser(vo.getUserId()));
 		}
-		if (StringUtils.isNotEmpty(scont)) {
-			wPost.setSearchContent(scont);
+		if (StringUtils.isNotEmpty(vo.getScont())) {
+			wPost.setSearchContent(vo.getScont());
 		}
 		// 添加排序
 		// page.orderBy
-		Page<WPost> page = new Page(pageNo, 8);
+		Page<WPost> page = new Page(vo.getPageNo(), 8);
+		if (null != vo.getOrderBy()&&vo.getOrderBy().length>0) {
+			StringBuffer buffer=new StringBuffer();
+			for (int i = 0; i < vo.getOrderBy().length; i++) {
+				buffer.append(vo.getOrderBy()[i] + " desc,");
+			}
+			page.setOrderBy(buffer.toString().substring(0,buffer.length()-1));
+		}
 		page = postService.findPage(page, wPost);
 		resultMap.put("total", page.getTotalPage());
-		if (pageNo >= page.getLast()) {
+		if (vo.getPageNo() >= page.getLast()) {
 			if (page.getList().size() > 0) {
 				for (WPost o : page.getList()) {
 					o.setCreateDateStr(RelativeDateFormat.format(o.getCreateDate()));
@@ -319,8 +330,12 @@ public class PostManagerController extends MyBaseController {
 	}
 
 	@RequestMapping(value = "center")
-	public String postCenter(String userId,Model model) {
+	public String postCenter(String userId, Model model) {
 		model.addAttribute("userId", userId);
+		WPostType type=new WPostType();
+		type.setParent(new WPostType("0"));
+		List<WPostType> types=postTypeService.findList(type);
+		model.addAttribute("types", types);
 		return "modules/postManager/postCenter";
 	}
 
@@ -332,17 +347,16 @@ public class PostManagerController extends MyBaseController {
 		model.addAttribute("post", post);
 		return "modules/postManager/detail";
 	}
-	
-	
+
 	@ResponseBody
 	@RequestMapping(value = "comments")
-	public Map<String, Object> comments(String comments,String postId) {
+	public Map<String, Object> comments(String comments, String postId) {
 		Map<String, Object> resultMap = new HashMap<>();
-		if (StringUtils.isBlank(comments)||StringUtils.isBlank(postId)) {
+		if (StringUtils.isBlank(comments) || StringUtils.isBlank(postId)) {
 			resultMap.put(AjaxReturn.MSG, "服务器异常啦！");
 			return resultMap;
 		}
-		WComments comments2=new WComments();
+		WComments comments2 = new WComments();
 		comments2.setUser(sessionService.getCurrentUser(getCurrentUserId()).getUser());
 		comments2.setComments(comments);
 		comments2.setPost(new WPost(postId));
@@ -350,8 +364,10 @@ public class PostManagerController extends MyBaseController {
 		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
 		return resultMap;
 	}
+
 	/**
 	 * 赞
+	 * 
 	 * @param postId
 	 * @return
 	 */
@@ -359,18 +375,18 @@ public class PostManagerController extends MyBaseController {
 	@RequestMapping(value = "praise")
 	public Map<String, Object> praise(String postId) {
 		Map<String, Object> resultMap = new HashMap<>();
-		if(StringUtils.isEmpty(postId)){
+		if (StringUtils.isEmpty(postId)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "服务器异常啦!");
 			return resultMap;
 		}
 		WSession session = sessionService.getCurrentUser(getCurrentUserId());
-		WPostPraise postPraise=new WPostPraise();
+		WPostPraise postPraise = new WPostPraise();
 		postPraise.setUser(session.getUser());
 		postPraise.setType(AllConst.PRAISE);
 		postPraise.setPost(new WPost(postId));
-		List<WPostPraise> postPraises=praiseService.findList(postPraise);
-		if(postPraises.size()>0) {
+		List<WPostPraise> postPraises = praiseService.findList(postPraise);
+		if (postPraises.size() > 0) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "你已经赞过了啦!");
 			return resultMap;
@@ -379,8 +395,10 @@ public class PostManagerController extends MyBaseController {
 		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
 		return resultMap;
 	}
+
 	/**
 	 * 踩
+	 * 
 	 * @param postId
 	 * @return
 	 */
@@ -388,18 +406,18 @@ public class PostManagerController extends MyBaseController {
 	@RequestMapping(value = "step")
 	public Map<String, Object> step(String postId) {
 		Map<String, Object> resultMap = new HashMap<>();
-		if(StringUtils.isEmpty(postId)){
+		if (StringUtils.isEmpty(postId)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "服务器异常啦!");
 			return resultMap;
 		}
 		WSession session = sessionService.getCurrentUser(getCurrentUserId());
-		WPostPraise postPraise=new WPostPraise();
+		WPostPraise postPraise = new WPostPraise();
 		postPraise.setUser(session.getUser());
 		postPraise.setType(AllConst.STEP);
 		postPraise.setPost(new WPost(postId));
-		List<WPostPraise> postPraises=praiseService.findList(postPraise);
-		if(postPraises.size()>0) {
+		List<WPostPraise> postPraises = praiseService.findList(postPraise);
+		if (postPraises.size() > 0) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "你已经踩过了啦!");
 			return resultMap;
@@ -408,9 +426,10 @@ public class PostManagerController extends MyBaseController {
 		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
 		return resultMap;
 	}
-	
+
 	/**
 	 * 关注
+	 * 
 	 * @param userId
 	 * @return
 	 */
@@ -418,22 +437,22 @@ public class PostManagerController extends MyBaseController {
 	@RequestMapping(value = "follow")
 	public Map<String, Object> follow(String userId) {
 		Map<String, Object> resultMap = new HashMap<>();
-		if(StringUtils.isEmpty(userId)){
+		if (StringUtils.isEmpty(userId)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "服务器异常啦!");
 			return resultMap;
 		}
 		WSession session = sessionService.getCurrentUser(getCurrentUserId());
-		if(session.getUser().getId().equals(userId)) {
+		if (session.getUser().getId().equals(userId)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "本人不需要关注啦!");
 			return resultMap;
 		}
-		WFollow follow=new WFollow();
+		WFollow follow = new WFollow();
 		follow.setFollowUser(new WUser(userId));
 		follow.setUser(session.getUser());
-		List<WFollow> follows=followService.findList(follow);
-		if(follows.size()>0) {
+		List<WFollow> follows = followService.findList(follow);
+		if (follows.size() > 0) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "你已经关注了啦!");
 			return resultMap;
@@ -442,32 +461,33 @@ public class PostManagerController extends MyBaseController {
 		resultMap.put(AjaxReturn.STATUS, AjaxReturn.SUCCESS);
 		return resultMap;
 	}
-	
+
 	/**
 	 * 收藏
+	 * 
 	 * @param userId
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "collect")
-	public Map<String, Object> collect(String postId,String userId) {
+	public Map<String, Object> collect(String postId, String userId) {
 		Map<String, Object> resultMap = new HashMap<>();
-		if(StringUtils.isEmpty(postId)||StringUtils.isEmpty(userId)){
+		if (StringUtils.isEmpty(postId) || StringUtils.isEmpty(userId)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "服务器异常啦!");
 			return resultMap;
 		}
 		WSession session = sessionService.getCurrentUser(getCurrentUserId());
-		if(session.getUser().getId().equals(userId)) {
+		if (session.getUser().getId().equals(userId)) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "本人不需要收藏啦!");
 			return resultMap;
 		}
-		WPostCollection collection=new WPostCollection();
+		WPostCollection collection = new WPostCollection();
 		collection.setPost(new WPost(postId));
 		collection.setUser(session.getUser());
-		List<WPostCollection> collections=collectionService.findList(collection);
-		if(collections.size()>0) {
+		List<WPostCollection> collections = collectionService.findList(collection);
+		if (collections.size() > 0) {
 			resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
 			resultMap.put(AjaxReturn.MSG, "你已经收藏了该帖子!");
 			return resultMap;

@@ -126,7 +126,7 @@ var userId=$("#userId").val();
 			  var vm=this;
 			  //发的帖子
 			  if(flag==1){
-				  vm.$http.post(ctx+'/post/postListJson', {'userId':userId,'pageNo':1}).then(function(res) {
+				  vm.$http.post(ctx+'/post/postListJson', JSON.stringify({'userId':userId,'pageNo':1})).then(function(res) {
 						if(res.data.status=='success'){
 							var data=res.data;
 							vm.postList=[];
@@ -162,6 +162,13 @@ var userId=$("#userId").val();
               else if(flag==6){
 	  
               }
+		  },
+		  //转到小说编辑页面
+		  gonovel:function(){
+			  window.location.href=ctx+'/novel/make';
+		  },
+		  goedit:function(){
+			  window.location.href=ctx+'/novel/edit';
 		  }
 	   }
    })

@@ -142,14 +142,14 @@ em{
 	  <div class="vertical">
 	  
 	  <div class="searchcont">
-	  <div class="stitle"><label>类型:</label><span class="all">全部</span><span></span></div>
-	  <div class="stitle"><label>其它:</label><span class="all">全部</span><span value="1">收藏量</span><span value="2">评论量</span><span value="3">赞量</span></div>
+	  <div class="stitle ptype"><label>类型:</label><span class="all" value="all">全部</span><c:forEach items="${types}" var="t"><span value="${t.id}">${t.name}</span></c:forEach></div>
+	  <div class="stitle oth"><label>其它:</label><span class="all" value="all">全部</span><span  value="collectionNum">收藏量</span><span value="commentsNum">评论量</span><span value="praiseNum">赞量</span></div>
 	  </div>
 	  
 	  <template v-for="o in postList">
 	  <div class="item" >
 	  <p class="title"  @click="detail(o.id)">{{o.title}}</p>
-	  <div class="meta"><span class="metainfo">赞<em>{{o.praiseNum}}</em></span><span class="metainfo">收藏量<em>{{o.collectionNum}}</em></span><span class="metainfo">评论量<em>{{o.comments}}</em></span><span class="type">{{o.postType.name}}</span><span class="person">{{o.user.nickname}}</span><span class="date">{{o.createDateStr}}</span></div>
+	  <div class="meta"><span class="metainfo">赞<em>{{o.praiseNum}}</em></span><span class="metainfo">收藏量<em>{{o.collectionNum}}</em></span><span class="metainfo">评论量<em>{{o.commentsNum}}</em></span><span class="type">{{o.postType.name}}</span><span class="person">{{o.user.nickname}}</span><span class="date">{{o.createDateStr}}</span></div>
 	  </div>
 	  </template>
 	  
@@ -176,4 +176,5 @@ em{
   <input type="hidden" value="${userId}" id="userId"/> 
 </body>
  <script src="${ctxStatic}/modules/front/js/project/postCenter.js"></script>
+ 
 </html>

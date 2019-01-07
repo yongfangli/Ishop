@@ -21,7 +21,7 @@ import com.thinkgem.jeesite.modules.wsp.post.entity.WPost;
 import com.thinkgem.jeesite.modules.wsp.post.entity.WPostType;
 
 @Controller
-@RequestMapping(value = "${webPath}/feedback/")
+@RequestMapping(value = "${webPath}/feedback")
 public class FeedBackController extends MyBaseController{
 	@Autowired
 	private WCommentsService commentsService;

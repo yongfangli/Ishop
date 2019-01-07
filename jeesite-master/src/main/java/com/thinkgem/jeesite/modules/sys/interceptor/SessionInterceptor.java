@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,39 +36,42 @@ import oracle.jdbc.driver.DatabaseError;
 public class SessionInterceptor extends BaseService implements HandlerInterceptor {
 	@Autowired
 	private WSessionService sessionService;
+	@Value("${excludeUrls}")
+	private String excludeUrls;
 
 	@Transactional(readOnly = false)
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String url = request.getRequestURI();
-		if (url.indexOf("login") > 0 || url.indexOf("menuJson") > 0 || url.indexOf("goRegister") > 0
-				|| url.indexOf("tryLogin") > 0 || url.indexOf("isLogin") > 0 || url.indexOf("help") > 0) {
-			return true;
-		} else {
-			Map<String, Object> resultMap = new HashMap<>();
-			// 检测session
-			WSession session = sessionService.getCurrentUser(request.getSession().getId());
-			if (null == session || null == session.getUser()) {
-				Class handlerc = handler.getClass();
-				String requestType = request.getHeader("X-Requested-With");
-				if ("XMLHttpRequest".equals(requestType)) {
-					resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
-					resultMap.put(AjaxReturn.MSG, "请先登入");
-					response.setContentType("application/json;charset=UTF-8");
-					response.getWriter().write(JSONUtils.toJSONString(resultMap));
-					response.getWriter().flush();
-					return false;
-				} else {
-					response.sendRedirect(request.getContextPath() + Global.getWebBasePath() + "/system/login");
-				}
-			} else {
-				session.setCreateDate(new Date(System.currentTimeMillis()));
-				sessionService.save(session);
+		String[] arg = excludeUrls.split(",");
+		for (String s : arg) {
+			if (url.indexOf(s) > 0) {
 				return true;
 			}
+		}
+		Map<String, Object> resultMap = new HashMap<>();
+		// 检测session
+		WSession session = sessionService.getCurrentUser(request.getSession().getId());
+		if (null == session || null == session.getUser()) {
+			Class handlerc = handler.getClass();
+			String requestType = request.getHeader("X-Requested-With");
+			if ("XMLHttpRequest".equals(requestType)) {
+				resultMap.put(AjaxReturn.STATUS, AjaxReturn.ERROR);
+				resultMap.put(AjaxReturn.MSG, "请先登入");
+				response.setContentType("application/json;charset=UTF-8");
+				response.getWriter().write(JSONUtils.toJSONString(resultMap));
+				response.getWriter().flush();
+				return false;
+			} else {
+				response.sendRedirect(request.getContextPath() + Global.getWebBasePath() + "/system/login");
+			}
+		} else {
+			session.setCreateDate(new Date(System.currentTimeMillis()));
+			sessionService.save(session);
 			return true;
 		}
+		return true;
 	}
 
 	@Override

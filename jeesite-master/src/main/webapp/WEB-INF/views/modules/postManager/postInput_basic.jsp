@@ -105,7 +105,6 @@
 			},
 			showFileAndUpload : function(e) {
 				var vm = this;
-				
 				var taget = e.target;
 				if (taget.files.length > 0) {
 					var fileo = new Object();

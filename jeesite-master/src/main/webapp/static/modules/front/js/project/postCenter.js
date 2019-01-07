@@ -4,7 +4,6 @@ var userId=$("#userId").val();
    var postCenter=new Vue({
 	  el:'#postCenter',
 	  data:{
-		  typeList:[],
 		  postList:[],
 		  last:false,
 		  pageNo:1,
@@ -13,14 +12,16 @@ var userId=$("#userId").val();
 		  showPage:[],
 		  allpage:0,
 		  total:0,
-		  scontent:''
+		  scontent:'',
+		  typeId:'',
+	      orderBy:[]
 	  },
 	  created:function(){
 			var vm=this;
-			//获取第一个分类的列表
+			//获取帖子列表
 			  var vm=this;
 			  vm.$http.post(posturl, 
-					  {'userId':userId}).then(function(res) {
+					  JSON.stringify({'userId':userId})).then(function(res) {
 								if(res.data.status=='success'){
 									var data=res.data;
 									vm.last=data.last;
@@ -36,6 +37,7 @@ var userId=$("#userId").val();
 									 Msg.show("服务器异常!");
 								}
 							});
+			  
 		}, 
 	  methods:{
 		  search:function(flag){
@@ -44,7 +46,7 @@ var userId=$("#userId").val();
 				  vm.pageNo=1; 
 			  }
 			  vm.$http.post(posturl, 
-					  {'pageNo':vm.pageNo,'scont':vm.scontent,'userId':userId}).then(function(res) {
+					  JSON.stringify({'pageNo':vm.pageNo,'scont':vm.scontent,'userId':userId,'typeId':vm.typeId,'orderBy':vm.orderBy})).then(function(res) {
 								if(res.data.status=='success'){
 									var data=res.data;
 									vm.last=data.last;
@@ -136,5 +138,39 @@ var userId=$("#userId").val();
     	   $(".searchform").removeClass("sch");
 			$(".search").removeClass("schi");
 	   })
+	   
+	   //搜索
+	       
+	   $(".ptype span").click(function(){
+		 if($(this).attr('value')!='all'){
+			 postCenter.typeId=$(this).attr('value');
+			 postCenter.search();
+			 $(this).addClass('stress');
+			 $(this).siblings().removeClass('stress');
+		 }else{
+			 postCenter.typeId='';
+			 $(this).siblings().removeClass('stress');
+			 postCenter.search();
+		 }
+	   });
+       $(".oth span").click(function(){
+  		 if($(this).attr('value')!='all'){
+  			 if($(this).hasClass('stress')){
+  				var ostr=$(this).attr('value');
+  			    var index=postCenter.orderBy.indexOf(ostr);
+  			    postCenter.orderBy.splice(index,1);
+  			    $(this).removeClass('stress');
+  			 }else{
+  				postCenter.orderBy.push($(this).attr('value'));
+  				$(this).addClass('stress');
+  			 }
+  			 postCenter.search();
+  		 }else{
+  			 postCenter.orderBy=[];
+  			$(this).siblings().removeClass('stress');
+  			postCenter.search();
+  		 }
+  	   });
+       
    })
 

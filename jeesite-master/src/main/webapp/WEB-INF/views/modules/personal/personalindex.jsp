@@ -20,7 +20,7 @@
     display: flex;
 }
 .protail{
-    height: 70px;
+    height: 100px;
     text-align: center;
     padding-top: 10px;
     padding-bottom: 20px;
@@ -102,7 +102,6 @@
     margin-left: 100px;
     max-width: 600px;
     align-items: flex-start;
-    
 }
 .pmenu{
    width: 150px;
@@ -114,6 +113,16 @@ a{
     position: relative;
     bottom: 0px;
     left: 50%;
+}
+.opt{
+    padding: 2px 10px;
+}
+.opt span{
+    background: #ffe1df;
+    border-radius: 5px;
+    padding: 4px;
+    color: black;
+    margin-left:10px;
 }
 </style>
 </head>
@@ -135,6 +144,7 @@ a{
        
        <input id="portrait" type="file" style="display:none" @change="uploadPortrait($event)">
        </div>
+       <div class="opt"><span @click="gonovel">小说创作</span><span @click="goedit">我的小说</span></div>
         <div class="pdesc"> <span class='edit' @click="makeEdit($event)">编辑</span><span class='exist' @click="exit()">退出登录</span></div>
         <div class="pdesc"><span>昵称:</span><input :class="className" :readonly="readonly"  name="nickname" value="${user.nickname}" /></div>
         <div class="pdesc"><span>联系电话:</span><input :class="className" :readonly="readonly" name="phone" value="${user.phone}" /></div>

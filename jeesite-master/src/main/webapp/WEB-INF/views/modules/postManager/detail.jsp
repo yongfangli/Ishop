@@ -48,9 +48,10 @@
    
 }
 .innerContent{
-     margin-top: 20px;
-     background: #ece6e6;
-     overflow: hidden;
+    margin-top: 20px;
+    background: #fbfbfb;
+    overflow: hidden;
+    border-radius: 5px;
 }
 .target img{
 	width: 200px;
@@ -62,8 +63,16 @@
 #comments{
      width: 1160px;
     outline: none;
-    border: 1px solid #cfcfef;
+    border: 0;
     color: black;
+    resize: none;
+    border-radius: 10px;
+}
+#comments::-webkit-scrollbar
+{
+	width: 16px;
+	height: 16px;
+	background-color:rgb(255,174,91);
 }
 .submitbtn{
     float: right;

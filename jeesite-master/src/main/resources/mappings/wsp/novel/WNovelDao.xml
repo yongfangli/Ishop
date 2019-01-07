@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wsp.novel.dao.WNovelDao">
+    
+	<sql id="wNovelColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.cover AS "cover",
+		a.userid AS "user.id",
+		a.fontnum AS "fontnum",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="wNovelJoins">
+	</sql>
+    
+	<select id="get" resultType="WNovel">
+		SELECT 
+			<include refid="wNovelColumns"/>
+		FROM w_novel a
+		<include refid="wNovelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WNovel">
+		SELECT 
+			<include refid="wNovelColumns"/>
+		FROM w_novel a
+		<include refid="wNovelJoins"/>
+		<where>
+			<if test="user != null and user.id != '' and user.id != null">
+				a.userId = #{user.id}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WNovel">
+		SELECT 
+			<include refid="wNovelColumns"/>
+		FROM w_novel a
+		<include refid="wNovelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO w_novel(
+			id,
+			title,
+			cover,
+			userid,
+			fontnum,
+			create_date,
+			update_date
+		) VALUES (
+			#{id},
+			#{title},
+			#{cover},
+			#{user.id},
+			#{fontnum},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE w_novel SET 	
+			title = #{title},
+			cover = #{cover},
+			userid = #{user.id},
+			fontnum = #{fontnum},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM w_novel
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
