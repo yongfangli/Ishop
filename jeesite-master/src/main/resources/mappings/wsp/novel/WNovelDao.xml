@@ -9,10 +9,12 @@
 		a.userid AS "user.id",
 		a.fontnum AS "fontnum",
 		a.create_date AS "createDate",
-		a.update_date AS "updateDate"
+		a.update_date AS "updateDate",
+		u.nickname as "user.nickname"
 	</sql>
 	
 	<sql id="wNovelJoins">
+	    left join w_user u on u.id=a.userid
 	</sql>
     
 	<select id="get" resultType="WNovel">

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>首页</title>
+<title>小说制作</title>
 <%@include file="/WEB-INF/views/include/webHead.jsp"%>
 <meta charset="utf-8">
 <style>
@@ -49,7 +49,7 @@
 	<div class="n-cln">
 	<label>上传封面:</label>
 			<img src="${ctxStatic}/images/addfile.svg" type="image/svg+xml" @click="upload" />
-			<input class="file" v-model="file" type="file" style="display:none"/>
+			<input class="file" type="file" style="display:none"/>
 	</div>
 	<div class="n-cln"><input @click="sumb" class="submit" type="button" name="title" value="提交" /></div>
 	</div>
@@ -64,7 +64,6 @@ var novel=new Vue({
 	el:'.n-content',
 	data:{
 		title:'',
-		file:''
 	},
 	methods:{
 		upload:function(){
@@ -72,15 +71,20 @@ var novel=new Vue({
 		},
 		sumb:function(){
 			var vm=this;
+			var file=$('.file')[0].files[0];
 			if(vm.title==''){
 				Msg.show("请输入标题");
 			}else{
-				if(undefined!=vm.file.name&&vm.file.name!=''&&!reg.exec(vm.file.name)){
+				if(undefined!=file&&!reg.exec(file.name)){
 					 Msg.show("文件格式错误!");
 					 return;
 				}
+				if(undefined==file){
+					 Msg.show("请上传封面!");
+					 return;
+				}
 				var  form=new FormData();
-				form.append('file',vm.file);
+				form.append('file',file);
 				form.append('title',vm.title);
 				vm.$http.post(ctx+'/novel/saveNovel', form).then(function(res) {
 					if(res.data.status=='success'){
@@ -90,7 +94,7 @@ var novel=new Vue({
 					    Msg.show(res.data.msg);
 					}
 				}, function(res) {
-					Msg.show(res.status)
+					Msg.show(res.status);
 				});
 			}
 		}

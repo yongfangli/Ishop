@@ -25,6 +25,7 @@ public class WNovel extends DataEntity<WNovel> {
 	private WUser user;		// 作者
 	private Long fontnum;		// fontnum
 	private List<WNovelChapter> chapters;
+	private String updateStr;
 	public WNovel() {
 		super();
 	}
@@ -78,6 +79,14 @@ public class WNovel extends DataEntity<WNovel> {
 
 	public void setChapters(List<WNovelChapter> chapters) {
 		this.chapters = chapters;
+	}
+
+	public String getUpdateStr() {
+		return updateStr;
+	}
+
+	public void setUpdateStr(String updateStr) {
+		this.updateStr = updateStr;
 	}
 	
 }

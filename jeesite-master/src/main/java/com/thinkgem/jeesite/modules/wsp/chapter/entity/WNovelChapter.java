@@ -29,8 +29,6 @@ public class WNovelChapter extends DataEntity<WNovelChapter> {
 	public WNovelChapter(String id){
 		super(id);
 	}
-
-	@Length(min=0, max=255, message="title长度必须介于 0 和 255 之间")
 	public String getTitle() {
 		return title;
 	}
@@ -38,7 +36,7 @@ public class WNovelChapter extends DataEntity<WNovelChapter> {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	public WNovel getNovel() {
 		return novel;
 	}
