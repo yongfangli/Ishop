@@ -95,7 +95,7 @@ var novel=new Vue({
 
 function showNovelDetail(e){
 	var nid=$(e).attr('nid');
-	window.location.href=ctx+'/novel/detail?nid='+nid;
+	window.location.href=ctx+'/novel/novelDetail?nid='+nid;
 }
 
 </script>

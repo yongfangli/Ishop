@@ -232,9 +232,15 @@ public class NovelController extends MyBaseController {
 		return resultMap;
 	}
 	
-	@RequestMapping("detail")
-	public String detail(String nId,Model model) {
-		model.addAttribute("nId", nId);
+	@RequestMapping("novelDetail")
+	public String novelDetail(String nid,Model model) {
+		WNovel novel=new WNovel();
+		novel=novelService.get(nid);
+		WNovelChapter chapter=new WNovelChapter();
+		chapter.setNovel(novel);
+		novel.setChapters(novelChapterService.findList(chapter));
+		model.addAttribute("nId", nid);
+		model.addAttribute("novel",novel);
 		return "modules/novel/detail";
 	}
 	
