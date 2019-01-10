@@ -18,6 +18,38 @@
 .chapter-list li{
    cursor:pointer;
 }
+.d-content{
+    display: flex;
+    justify-content: flex-start;
+}
+.panel{
+    width: 900px;
+    margin-left: 50px;
+    max-height: 800px;
+    overflow-y: scroll;
+    background: white;
+    color: black !important;
+}
+.panel::-webkit-scrollbar {
+        width: 10px;     
+        height: 1px;
+    }
+.panel::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: #31A2E2;
+    }
+.panel::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        background: #EDEDED;
+    }
+.panel span{
+    color: black;
+}
+.express{
+   background: #fad1e3;
+}
 </style>
 </head>
 <body>
@@ -37,6 +69,8 @@
     </ul>	
 	
 	</div>
+	<div class="panel"></div>
+	
 	
 	</div>
 	<input value="${nid}" type="hidden" id="nid"/>
@@ -57,7 +91,28 @@ var detail=new Vue({
 		
 	}
 })
-
+window.onload=function(){
+	
+}
+function showDetail(e){
+	chapterId=$(e).attr("cid");
+	if(!$(e).hasClass('express'){
+		$(e).addClass('express').siblings().
+	}
+	$.ajax({
+		url:ctx+'/novel/getChapterContent',
+		type:'post',
+		dataType:'json',
+		data:{'chapterId':chapterId},
+		success:function(data){
+			if(data.status=='success'){
+				$('.panel').empty().html(data.data.content);
+			}else{
+			    Msg.show(data.msg);
+			}
+		}
+	})
+}
  
 </script>
 </body>
