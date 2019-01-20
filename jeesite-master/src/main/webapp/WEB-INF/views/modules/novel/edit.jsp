@@ -50,6 +50,7 @@
     pointer-events: none;
 }
 .editor{
+-webkit-user-modify: read-write-plaintext-only;
     background: #fff; 
     width: 800px;
     height: 550px;

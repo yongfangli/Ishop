@@ -25,10 +25,9 @@
 .panel{
     width: 900px;
     margin-left: 50px;
-    max-height: 800px;
+    height: 700px;
     overflow-y: scroll;
     background: white;
-    color: black !important;
 }
 .panel::-webkit-scrollbar {
         width: 10px;     
@@ -50,6 +49,27 @@
 .express{
    background: #fad1e3;
 }
+.operate{
+       height: 30px;
+}
+.rig{
+   height: 800px;
+}
+.color{
+   width: 40px;
+    height: 20px;
+    display: inline-block;
+    margin-top: 3px;
+}
+.setting{
+    width: 250px;
+    position: absolute;
+    right: 25%;
+    background: white;
+}
+.hid{
+  display:none;
+}
 </style>
 </head>
 <body>
@@ -69,8 +89,16 @@
     </ul>	
 	
 	</div>
+<div class="setting hid"><label>字体颜色:</label>
+<span class='color' style='background: #2cd8d8;'></span>
+<span class='color' style='background: #ff9900;'></span>
+<span class='color' style='background: red;'></span>
+<span class='color' style='background: black;'></span>
+</div>
+<div class="rig">
+<div class='operate'> <i class="fa fa-cog fa-2x" onclick="showSetting()"></i></div>
 	<div class="panel"></div>
-	
+</div>	
 	
 	</div>
 	<input value="${nid}" type="hidden" id="nid"/>
@@ -91,14 +119,11 @@ var detail=new Vue({
 		
 	}
 })
-window.onload=function(){
-	
-}
 function showDetail(e){
 	chapterId=$(e).attr("cid");
-	if(!$(e).hasClass('express'){
-		$(e).addClass('express').siblings().
-	}
+	if(!$(e).hasClass('express')){
+		$(e).addClass('express').siblings().removeClass('express');
+	};
 	$.ajax({
 		url:ctx+'/novel/getChapterContent',
 		type:'post',
@@ -113,7 +138,22 @@ function showDetail(e){
 		}
 	})
 }
+function showSetting(){
+	if($('.setting').hasClass('hid')){
+		$('.setting').removeClass('hid');
+	}else{
+		$('.setting').addClass('hid');
+	}
+}
  
+ $(function(){
+	$('.color').click(function(){
+		var col=$(this).css('background-color');
+		$('.panel').css('color','');
+		$('.panel').css('color',col);
+		$('.setting').addClass('hid');
+	}); 
+ })
 </script>
 </body>
 </html>
