@@ -38,7 +38,9 @@ public class PersonController extends MyBaseController {
 	@RequestMapping("")
 	public String index(Model model) {
 		WSession user = wssioonService.getCurrentUser(getCurrentUserId());
-		model.addAttribute("user", userService.get(user.getUser()));
+		if(null!=user){
+			model.addAttribute("user", userService.get(user.getUser()));
+		}
 		return "modules/personal/personalindex";
 	}
 

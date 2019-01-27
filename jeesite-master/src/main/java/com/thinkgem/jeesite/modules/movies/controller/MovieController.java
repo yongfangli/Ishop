@@ -38,7 +38,6 @@ public class MovieController extends MyBaseController {
 	public String moviesMake() {
          return "modules/movies/make";
 	}
-	
 	@ResponseBody
 	@RequestMapping(value = "pictureUpload")
 	public Map<String, Object> pictureUpload(@RequestParam("files") MultipartFile[] files,String topic,String keyword,String desc) throws IOException {

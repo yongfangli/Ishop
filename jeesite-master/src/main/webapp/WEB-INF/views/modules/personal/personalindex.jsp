@@ -144,7 +144,7 @@ a{
        
        <input id="portrait" type="file" style="display:none" @change="uploadPortrait($event)">
        </div>
-       <div class="opt"><span @click="gonovel">小说创作</span><span @click="goedit">我的小说</span></div>
+       <div class="opt"><span @click="gonovel">小说创作</span><span @click="goedit">我的小说</span><span @click="goluxiang">录像制作</span></div>
         <div class="pdesc"> <span class='edit' @click="makeEdit($event)">编辑</span><span class='exist' @click="exit()">退出登录</span></div>
         <div class="pdesc"><span>昵称:</span><input :class="className" :readonly="readonly"  name="nickname" value="${user.nickname}" /></div>
         <div class="pdesc"><span>联系电话:</span><input :class="className" :readonly="readonly" name="phone" value="${user.phone}" /></div>

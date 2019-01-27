@@ -169,6 +169,9 @@ var userId=$("#userId").val();
 		  },
 		  goedit:function(){
 			  window.location.href=ctx+'/novel/edit';
+		  },
+		  goluxiang:function(){
+			  window.location.href=ctx+'/movies/make';
 		  }
 	   }
    })
