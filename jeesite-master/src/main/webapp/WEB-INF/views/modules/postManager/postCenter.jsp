@@ -11,12 +11,12 @@
 .type{
     font-style: italic;
     position: absolute;
-    right: 300px;
+    right: 500px;
     color: #64d5ca;
 }
 .date{
     position: absolute;
-    right: 200px;
+    right: 400px;
     color: #79796c;
 }
 .item{
@@ -26,7 +26,7 @@
 .person{
     font-style: italic;
     position: absolute;
-    right: 400px;
+    right: 600px;
     color: #64d5ca;
     background: #ffe1df;
     border-radius: 10px;
